@@ -13,7 +13,7 @@ main.pdf: $(CONTENTS) $(JPEGS) $(PNGS)
 
 clean:
 	latexmk -c
-	# rm main.bbl main.nav main.snm main.run.xml
+	rm -f main.bbl main.nav main.snm main.run.xml
 
 # %.png:
 # 	sips -g dpiHeight $@
