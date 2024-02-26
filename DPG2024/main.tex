@@ -37,6 +37,7 @@
 % \DefineJournalAbbreviation{Instruments}{Instrum.}
 % \DefineJournalAbbreviation{Spectrometers,}{Spectro.}
 
+\newcommand{\slfrac}[2]{\left.#1\middle/#2\right.}
 
 
 \title[Millepede algorithm for Time and Position Calibration of NeuLAND]{Application of Millepede algorithm to Time and Position Calibration of NeuLAND}
@@ -137,6 +138,161 @@
 \end{frame}
 }
 
+\begin{frame}[t]{Position and time calibration}
+	\vspace{-1cm}
+	\begin{columns}[t]
+		\begin{column}{0.4 \textwidth}
+			\vspace*{-0.5cm}
+			\begin{figure}[t]
+				\hspace*{-0.5cm}
+				\centering
+				\includegraphics[keepaspectratio, height = 0.4\textheight]{Bar.png}
+			\end{figure}
+			\vspace{0.5cm}
+			\textit{Symbols}:
+			\scriptsize{
+				\begin{flalign*}
+					x           & : \text{position of the interaction } & \\
+					t           & : \text{time of the interaction}      & \\
+					L           & : \text{length of the scintillator}   & \\
+					t_l         & : \text{time of the left PMT signal}  & \\
+					t_r         & : \text{time of the right PMT signal} & \\
+					\alert{C_e} & : \text{effective speed of light}     & \\
+				\end{flalign*}
+			}
+		\end{column}
+		\pause
+		\begin{column}{0.48 \textwidth}
+			\begin{block}{\small Time relation:}
+				$$ t = \frac{t_r + t_l}{2} - \frac{L}{2 \cdot \alert{C_e}} \onslide<+(1)->{+ \alert{t_\text{sync}}}$$
+			\end{block}
+
+			\begin{block}{\small Position relation:}
+				$$ x = \frac{\alert{C_e}}{2}\left( t_r - t_l \only<+(1)->{ + \alert{t_\text{offset}}} \right)$$
+			\end{block}
+
+			\onslide<.->{ \small
+				\textit{Additional calibration parameters:}
+				\begin{itemize}
+					\item \alert{$t_\text{sync}$} : time synchronization among scintillators \\
+					\item<+-> \alert{$t_\text{offset}$} : time offset between adjacent PMTs
+				\end{itemize}
+
+			}
+
+			\vspace{0.5cm}
+			\onslide<+->{
+				\textit{Total number of calibration parameters: \alert{\Large{3900}}}
+			}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}[fragile,t]{Calibration principle}
+	\vspace*{-2em}
+	\begin{columns}[t]
+		\begin{column}{0.45 \textwidth}
+			\begin{block}{\small Calibration relation}
+				$$x = C_1 \cdot t + C_2$$
+			\end{block}
+			\textit{\footnotesize Data fitting}:
+			\begin{columns}
+				\begin{column}{0.6 \textwidth}
+					\includegraphics[keepaspectratio, height = 0.4\textheight]{fitting_plot.png}
+				\end{column}
+				\begin{column}{0.4 \textwidth}
+					\small
+					\vspace*{-1em}
+					\begin{align*}
+						 & (t_1,\  x_1) \\
+						 & (t_2,\  x_2) \\
+						 & \quad ...    \\
+						 & (t_i,\  x_i) \\
+						 & \quad ...    \\
+						 & (t_n,\  x_n)
+					\end{align*}
+				\end{column}
+			\end{columns}
+			\vspace{0.3cm}
+			\footnotesize{
+				\textit{Minimize}
+				$$ \text{residual}= \sum_i \frac{(x_i - x(t_i, C_1, C_2))}{ 2* \sigma_i^2} $$
+			}
+		\end{column}
+		\pause
+		\begin{column}{0.48 \textwidth}
+			\begin{block}{Calibration with muon tracks}
+				\vspace*{-1.5em}
+				\begin{align}
+					\small
+					t     & = \slfrac{(t_r + t_l)}{2} - \slfrac{L}{(2 \cdot \alert{C_e})} + \alert{t_\text{sync}} \\
+					x     & = \alert{C_e}\cdot \left( t_r - t_l  + \alert{t_\text{offset}} \right) / 2            \\
+					x_\mu & = \textcolor{blue}{a^i_x} \cdot z_\mu  + \textcolor{blue}{b^i_x}                      \\
+					y_\mu & = \textcolor{blue}{a^i_y} \cdot z_\mu  + \textcolor{blue}{b^i_y}                      \\
+					t_\mu & = \textcolor{blue}{a^i_t} \cdot z_\mu
+				\end{align}
+			\end{block}
+			\textit{Calibration parameters for the $i$th event:}
+			$$\alert{C_e}, \alert{t_\text{sync}}, \alert{t_\text{offset}}, \textcolor{blue}{a^i_x}, \textcolor{blue}{a^i_y}, \textcolor{blue}{a^i_t}, \textcolor{blue}{b^i_x}, \textcolor{blue}{b^i_y}$$
+			\pause
+			\vspace*{1em}
+			\textit{With 10'000 events, the total number of calibration parameters: \alert{\huge 53'900!}}
+		\end{column}
+
+	\end{columns}
+\end{frame}
+
+\begin{frame}[t]{Current calibration method}
+	\vspace*{-2em}
+	\begin{columns}[t]
+		\begin{column}{0.45 \textwidth}
+			\begin{figure}[t]
+				\includegraphics<1>[width = \textwidth]{side_view1.png}
+				\includegraphics<2>[width = \textwidth]{side_view2.png}
+				\includegraphics<3-5>[width = \textwidth]{side_view3.png}
+				\includegraphics<6>[width = \textwidth]{side_view4.png}
+			\end{figure}
+		\end{column}
+		\begin{column}{0.45 \textwidth}
+			\begin{exampleblock}{\small Procedures}
+				\small
+				\begin{enumerate}
+					\item<1-> Obtain the positions of bars with signals
+					\item<2-> Reconstruct the muon track from the bar positions
+					\item<3-> Calculate positions of interaction point of the muon
+					\item<4-> Obtain calibration parameters via data fitting
+				\end{enumerate}
+			\end{exampleblock}
+			\onslide<5->{
+				\textit{\small Data fitting on positions:}\par
+				\begin{figure}[t]
+					\centering
+					\includegraphics[height = 2cm, width = 5cm]{example-image-golden}
+				\end{figure}
+			}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}[t]{Simultaneous fitting of global and local parameters}
+
+\end{frame}
+
+\begin{frame}[t]{Comparisons on PMT time offsets}
+
+\end{frame}
+
+\begin{frame}[t]{Comparisons on effective speed of light}
+
+\end{frame}
+
+\begin{frame}[t]{Comparisons on time synchronization}
+
+\end{frame}
+
+\begin{frame}[t]{Summary and outlook}
+
+\end{frame}
 % \begin{frame}[t]{Why do we need a simulation?}
 %     \begin{columns}[t]
 %         \begin{column}{0.5\textwidth}
