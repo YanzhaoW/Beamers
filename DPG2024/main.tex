@@ -8,7 +8,9 @@
 \usepackage{subfig}
 \usepackage{ragged2e}
 \usepackage{xcolor}
-\usepackage{amsmath}
+\usepackage{amsmath, arydshln, array}
+\usepackage{setspace}
+\usepackage{tikz}
 \usepackage{hyperref}
 % \usepackage[style=phys, backend=biber, articletitle=false, pageranges=false, citestyle=authoryear]{biblatex}
 \usepackage[natbib=true, style=phys, autocite=footnote, articletitle=false, pageranges=false, citestyle=authoryear]{biblatex}
@@ -16,6 +18,7 @@
 \usefonttheme[onlymath]{serif}
 \MakePerPage{footnote}
 \urlstyle{sf}
+
 
 % \bibliography{references.bib}
 % \usetheme[progressbar=frametitle]{metropolis}
@@ -104,6 +107,7 @@
 \usebackgroundtemplate{%
 	\includegraphics[width=\paperwidth, height=\paperheight]{r3bsetup_empty.png}}
 \begin{frame}{NeuLAND setup in $\text{R}^3\text{B}$}
+
 	\begin{columns}[c]
 		\begin{column}{0.4\textwidth}
 			\pause
@@ -133,6 +137,7 @@
 		\end{column}
 		\begin{column}{0.3\textwidth}
 		\end{column}
+
 	\end{columns}
 	\let\thefootnote\relax\footnotetext{\fullcite{BORETZKY2021165701}}
 \end{frame}
@@ -229,14 +234,14 @@
 					x     & = \alert{C_e}\cdot \left( t_r - t_l  + \alert{t_\text{offset}} \right) / 2            \\
 					x_\mu & = \textcolor{blue}{a^i_x} \cdot z_\mu  + \textcolor{blue}{b^i_x}                      \\
 					y_\mu & = \textcolor{blue}{a^i_y} \cdot z_\mu  + \textcolor{blue}{b^i_y}                      \\
-					t_\mu & = \textcolor{blue}{a^i_t} \cdot z_\mu
+					t_\mu & = \textcolor{blue}{a^i_t} \cdot z_\mu  + \textcolor{blue}{b^i_t}
 				\end{align}
 			\end{block}
 			\textit{Calibration parameters for the $i$th event:}
-			$$\alert{C_e}, \alert{t_\text{sync}}, \alert{t_\text{offset}}, \textcolor{blue}{a^i_x}, \textcolor{blue}{a^i_y}, \textcolor{blue}{a^i_t}, \textcolor{blue}{b^i_x}, \textcolor{blue}{b^i_y}$$
+			$$\alert{C_e}, \alert{t_\text{sync}}, \alert{t_\text{offset}}, \textcolor{blue}{a^i_x}, \textcolor{blue}{a^i_y}, \textcolor{blue}{a^i_t}, \textcolor{blue}{b^i_x}, \textcolor{blue}{b^i_y}, \textcolor{blue}{b^i_t}$$
 			\pause
 			\vspace*{1em}
-			\textit{With 10'000 events, the total number of calibration parameters: \alert{\huge 53'900!}}
+			\textit{With 10'000 events, the total number of calibration parameters: \alert{\huge 63'900!}}
 		\end{column}
 
 	\end{columns}
@@ -274,261 +279,114 @@
 	\end{columns}
 \end{frame}
 
-\begin{frame}[t]{Simultaneous fitting of global and local parameters}
+
+\begin{frame}[t,fragile]{Simultaneous fitting of global and local parameters}
+	\begin{columns}[t]
+		\begin{column}{0.45\textwidth}
+			\vspace*{-2em}
+
+			\begin{block}{\small Residual minimization}
+				\vspace{-1em}
+				$$\large{\partial} \sum^n_{j = 0}\sum_i \frac{\mathcal{Z}^j_i(g_1, ..., g_m, p^j_1, ..., p^j_l)}{ 2 (\sigma^j_i)^2} = 0$$
+			\end{block}
+			\scriptsize{
+				\vspace*{-2.5em}
+				\begin{flalign*}
+					g_{1\ldots m}   & : \text{$m$ \textit{global parameters}}                          & \\
+					p^j_{1\ldots l} & : \text{$l$ \textit{local parameters} for the $j$th $\mu$ track} & \\
+					n               & : \text{the total number of $\mu$ tracks}                        &
+				\end{flalign*}
+
+				\vspace*{-1em}
+			}
+			\textit{Newton's method:}
+
+			\vspace*{1em}
+			\hspace{3pt}\begin{tikzpicture}[thick]
+				\tikzset{good one/.style={color=black!50!green}}
+				\draw[good one] (-0.3, 0.1) -- (-0.3, -0.1);
+				\draw[<->,good one] (-0.3, 0) -- node[fill=white]{$m$}(0.9, 0);
+				\draw[good one] (0.9, 0.1) -- (0.9, -0.1);
+
+				\draw[red] (1.05, 0.1) -- (1.05, -0.1);
+				\draw[<->,red] (1.05, 0) -- node[fill=white]{$\sim n$}(3.2, 0);
+				\draw[red] (3.2, 0.1) -- (3.2, -0.1);
+			\end{tikzpicture}
+			\vspace*{-0.9em}
+			\setlength\extrarowheight{6pt}
+			\scriptsize{
+				$$ \left[  \begin{array}{c||c:c:c}
+							\sum_j \mathcal{C}_j & \ldots & \mathcal{G}_j & ...    \\[6pt] \hline\hline
+							\vdots               & \ddots & 0             & 0      \\[4pt] \hdashline
+							\mathcal{G}^T_j      & 0      & \Gamma_j      & 0      \\[6pt] \hdashline
+							\vdots               & 0      & 0             & \ddots \\
+						\end{array}  \right] \cdot
+					\left[ \begin{array}{c}
+							\Delta \mathbf{g}   \\[6pt] \hline\hline
+							\vdots              \\[4pt] \hdashline
+							\Delta \mathbf{p}^j \\[6pt] \hdashline
+							\vdots              \\
+						\end{array} \right] =
+					-\left[ \begin{array}{c}
+							\partial_\mathbf{g} \mathcal{Z}     \\[6pt] \hline\hline
+							\vdots                              \\[4pt] \hdashline
+							\partial_{\mathbf{p}^j} \mathcal{Z} \\[6pt] \hdashline
+							\vdots                              \\
+						\end{array} \right]
+				$$
+			}
+
+		\end{column}
+		\begin{column}[t]{0.45\textwidth}
+			\vspace*{-1em}
+
+			\begin{spacing} {0.5}
+				\small
+				\textbf{\textit{Matrix Dimension reduction!}} (Schur complement method)
+				$$\tilde{\mathcal{C}} \cdot \Delta \mathbf{g} = \mathcal{D}$$
+				where
+				$$\tilde{\mathcal{C}} = \sum_j \mathcal{C}_j + \sum_j \left(-\mathcal{G}_j \Gamma^{-1}_j \mathcal{G}^T_j \right)$$
+			\end{spacing}
+			\begin{exampleblock} {Advantages}
+				\small
+				\begin{itemize}
+					\item Simultaneous fitting of all parameters
+					\item Computation complexity independent of local parameter size
+					\item Direct fitting without any approximation
+				\end{itemize}
+			\end{exampleblock}
+			\textit{Software implementation}: \large{\textbf{Millepede-II}}\footnotemark
+			\footnotetext{\fullcite{millepede}}
+		\end{column}
+	\end{columns}
 
 \end{frame}
 
 \begin{frame}[t]{Comparisons on PMT time offsets}
-
+	\begin{figure}[t]
+		\vspace*{-1em}
+		\centering
+		\includegraphics[height = 0.9 \textheight]{t_diff.png}
+	\end{figure}
 \end{frame}
 
 \begin{frame}[t]{Comparisons on effective speed of light}
-
+	\begin{figure}[t]
+		\vspace*{-1em}
+		\centering
+		\includegraphics[height = 0.9 \textheight]{tsync.png}
+	\end{figure}
 \end{frame}
 
 \begin{frame}[t]{Comparisons on time synchronization}
-
+	\begin{figure}[t]
+		\vspace*{-1em}
+		\centering
+		\includegraphics[height = 0.9 \textheight]{effective_c.png}
+	\end{figure}
 \end{frame}
 
 \begin{frame}[t]{Summary and outlook}
 
 \end{frame}
-% \begin{frame}[t]{Why do we need a simulation?}
-%     \begin{columns}[t]
-%         \begin{column}{0.5\textwidth}
-%             % Method 1: Clustering \footfullcite{Neuland::TDR}
-%             Method 1: Clustering \footnotemark
-%             \begin{figure}
-%                 \hspace*{-1cm}
-%                     \centering
-%                     \includegraphics[width = 0.35\textwidth]{Cluster}
-%                     \includegraphics[width = 0.35\textwidth]{clusterPlot}
-%             \end{figure}
-%                 % \vspace*{-0.2cm}
-%             Method 2: Bayes WCP
-%             $$P(H|\va{E}) = P(H) \frac{P(\va{E}|H)}{\sum_h{P(\va{E}|H_h)P(H_h)}}$$
-%             Method 3: Convolutional neural network 
-%             % \begin{figure}
-%             %     \includegraphics[width = 0.5\textwidth]{CNN}
-%             % \end{figure}
-%         \end{column}
-%         \begin{column}{0.5\textwidth}
-%             {\color{red} \onslide<2->{ \textbf{\textit{Validation?}}} \onslide<3-> {\textbf{\textit{Simulation!}}}}
-%             \begin{figure}[t]
-%                 \includegraphics<1>[width = \textwidth]{FlowSimu/FlowSimu.001.png}%
-%                 \includegraphics<2>[width = \textwidth]{FlowSimu/FlowSimu.001.png}%
-%                 \includegraphics<3>[width = \textwidth]{FlowSimu/FlowSimu.002.png}%
-%                 \includegraphics<4>[width = \textwidth]{FlowSimu/FlowSimu.003.png}%
-%                 \includegraphics<5>[width = \textwidth]{FlowSimu/FlowSimu.004.png}%
-%             \end{figure}
-%             % \vspace*{-1.8cm}
-%             % \footnotetext[1]{\textcite{Neuland::TDR}}
-%         \end{column}
-%     \end{columns}
-%     \vspace*{-1.8cm}
-%     \footcitetext{Neuland::TDR}
-% \end{frame}
-
-% \begin{frame}{Digitization process}
-%     \begin{columns}
-%         \begin{column}{0.5\textwidth}
-%             \begin{figure}[t]
-%                 \includegraphics<1>[keepaspectratio, height = 0.8\textheight]{digiFlow/digiFlow.001.png}%
-%                 \includegraphics<2>[keepaspectratio, height = 0.8\textheight]{digiFlow/digiFlow.002.png}%
-%                 \includegraphics<3>[keepaspectratio, height = 0.8\textheight]{digiFlow/digiFlow.003.png}%
-%                 % \includegraphics<4>[keepaspectratio, height = 0.8\textheight]{digiFlow/digiFlow.004.png}%
-%                 \includegraphics<4>[keepaspectratio, height = 0.8\textheight]{digiFlow/digiFlow.005.png}%
-%                 \includegraphics<5>[keepaspectratio, height = 0.8\textheight]{digiFlow/digiFlow.005.png}%
-%                 % \includegraphics<6>[keepaspectratio, height = 0.8\textheight]{digiFlow/digiFlow.005.png}%
-%             \end{figure}
-%         \end{column}
-%         \begin{column}{0.5\textwidth}
-%             \vspace*{-0.5cm}
-%             \begin{figure}[t]
-%                 \includegraphics[keepaspectratio, height = 0.3\textheight]{Bar}%
-%             \end{figure}
-%             \vspace*{-0.5cm}
-%             \visible<5>
-%             {
-%             \begin{figure}[t]
-%                 % \centering{\small Energy depositions of different Particles}
-%                 % \includegraphics[keepaspectratio, height = 0.5\textheight]{Edep}%
-%                 \centering{\small Energy depositions of different particles \tiny($E_n = \SI{600}{\mega\electronvolt}$)}
-%                 \includegraphics[keepaspectratio, height = 0.5\textheight]{Edep}%
-%             \end{figure}
-%         }
-%         \end{column}
-%     \end{columns}
-% \end{frame}
-
-% \begin{frame}{Simulation of scintillation bar}
-%     \begin{columns}
-%         \begin{column}{0.5\textwidth}
-%             \begin{figure}[t]
-%                 \includegraphics[keepaspectratio, height = 0.8\textheight]{digiFlow/digiFlow.006.png}%
-%             \end{figure}
-%         \end{column}
-%         \begin{column}{0.5\textwidth}
-%             % \setbeamercolor{block title}{#3}
-%             \setbeamercolor{block body}{bg=white, fg=black}
-%             \pause
-%             % \vspace*{-0.1cm}
-%             % \begin{beamercolorbox}[rounded=true, ht=1.1ex]{block title}
-%             %     \small PMT saturation\footnotemark 
-%             % \end{beamercolorbox}
-%             \vspace*{-0.3cm}
-%             \begin{block}{\small PMT saturation\footnotemark}
-%                 \begin{figure}[t]
-%                     \includegraphics[keepaspectratio, height = 0.4\textwidth]{PMTSAT}%
-%                 \end{figure}
-%             \end{block}
-%             \pause
-%             \vspace*{-0.2cm}
-%             \begin{block}{\small Light attenuation}
-%             \vspace*{-0.2cm}
-%             {
-%                 \small$$Y_{PMT} = Y_{edep} \exp (-\alpha \cdot L)$$
-%             }
-%             \vspace*{-0.7cm}\\
-%             {\footnotesize$\alpha$: Attenuation factor}
-%             \end{block}
-%             \pause
-%             \vspace*{-0.2cm}
-%             \begin{block}{\small PMT signal matching}
-%             {
-%                 \small
-%                 \vspace*{-0.5cm}
-%                 $$\text{min }\Delta = 
-%                 \begin{cases}
-%                     \lvert E_1/E_2 \cdot e^{\alpha c (t_1-t_2)} -1\rvert\ ,& t_1>t_2\\
-%                     \lvert E_2/E_1 \cdot e^{\alpha c (t_2-t_1)} -1\rvert\ ,& t_2>t_1\\
-%                 \end{cases}$$
-%             }
-%             \end{block}
-%         \end{column}
-%     \end{columns}
-%     % \footcitetext{Hamamatsu}
-%     \footnotetext{\fullcite{Hamamatsu}}
-% \end{frame}
-
-% \begin{frame}{Simulation of digitization channel}
-%     \begin{columns}
-%         \begin{column}{0.5\textwidth}
-%             \begin{figure}[t]
-%                 \includegraphics[keepaspectratio, height = 0.8\textheight]{digiFlow/digiFlow.007.png}%
-%             \end{figure}
-%         \end{column}
-%         \begin{column}{0.5\textwidth}
-%             \begin{figure}[t]
-%                 \includegraphics[keepaspectratio, height = 0.3\textwidth]{PMT2TAMEX.png}%
-%             \end{figure}
-%             \pause
-%             \begin{block}{Simulation steps}
-%                 \begin{enumerate}
-%                         \setbeamercovered{transparent}
-%                     \item<2-> Apply threshold
-%                     \item<3-> Perform pileup of PMT signals (addition)
-%                     \item<3-> PMT signals $\Rightarrow$ FQT signals
-%                     \item<4-> Perform pileup of FQT signals (merge)
-%                     \item<4-> Energy and time value smearing
-%                 \end{enumerate}
-%             \end{block}
-%         \end{column}
-%     \end{columns}
-% \end{frame}
-
-% \begin{frame}{Total energy deposition}
-%     \vspace*{-0.7cm}
-%     \begin{columns}
-%         \begin{column}{0.5\textwidth}
-%             \begin{figure}[t]
-%                 \centering{\small Neutron multiplicity = 4}
-%                 \includegraphics[keepaspectratio, width = \textwidth]{Plots/ETot_4n}%
-%             \end{figure}
-%         \end{column}
-%         \begin{column}{0.5\textwidth}
-%             \begin{figure}[t]
-%                 \centering{\small Neutron kinetic energy = $\SI{1}{\giga\electronvolt}$}
-%                 \includegraphics[keepaspectratio, width = \textwidth]{Plots/ETot_E1}%
-%             \end{figure}
-%         \end{column}
-%     \end{columns}
-% \end{frame}
-
-
-% \begin{frame}{Energy deposition of hits}
-%     \vspace*{-0.6cm}
-%     \begin{columns}
-%         \begin{column}{0.5\textwidth}
-%             \begin{figure}[t]
-%                 \centering{\small Neutron multiplicity = 4}
-%                 \includegraphics[keepaspectratio, width = 0.9\textwidth]{Plots/Ehit_4n}%
-%             \end{figure}
-%         \end{column}
-%         \begin{column}{0.5\textwidth}
-%             \begin{figure}[t]
-%                 \centering{\small Neutron kinetic energy = $\SI{1}{\giga\electronvolt}$}
-%                 \includegraphics[keepaspectratio, width = 0.9\textwidth]{Plots/Ehit_E1}%
-%             \end{figure}
-%         \end{column}
-%     \end{columns}
-% \end{frame}
-
-% \begin{frame}{Comparisons to Tacquila and mockup}
-%     \vspace*{-0.6cm}
-%     \begin{columns}
-%         \begin{column}{0.5\textwidth}
-%             \begin{figure}[t]
-%                 \centering{\small Hit energy deposition ($M=4, KE=\SI{1}{\giga\electronvolt}$)}
-%                 \includegraphics[keepaspectratio, width = 0.9\textwidth]{Plots/EHitAll_E1_4n.png}%
-%             \end{figure}
-%         \end{column}
-%         \begin{column}{0.5\textwidth}
-%             \begin{figure}[t]
-%                 \centering{\small Total energy deposition ($M=4, KE=\SI{1}{\giga\electronvolt}$)}
-%                 \includegraphics[keepaspectratio, width = 0.9\textwidth]{Plots/EtotAll_E1_4n.png}%
-%             \end{figure}
-%         \end{column}
-%     \end{columns}
-% \end{frame}
-
-% \begin{frame}{Summary and outlook}
-%     \begin{columns}
-%         \begin{column}{0.5\textwidth}
-%             \begin{block}{In this talk}
-%                 \begin{itemize}
-%                     \item simulation on scintillation bars and digitization channels
-%                     \item multi-hit capability
-%                     \item distribution on total energy deposition and hit energies
-%                     \item better performance on low energy filtering
-%                 \end{itemize}
-%             \end{block}
-
-%             \begin{exampleblock}{What to do next}
-%                 \begin{itemize}
-%                     \item integration time window on Tamex
-%                     \item comparison to real calibrated data
-%                     \item applications on other detectors
-%                 \end{itemize}
-%             \end{exampleblock}
-%         \end{column}
-%         \begin{column}{0.5\textwidth}
-%             \begin{figure}[t]
-%                 \includegraphics[keepaspectratio, width = 0.4\textwidth]{Bar}%
-%                 \includegraphics[keepaspectratio, width = 0.4\textwidth]{PMT2TAMEX.png}%
-%             \end{figure}
-%             \begin{figure}[t]
-%                 \includegraphics[keepaspectratio, width = 0.6\textwidth]{Plots/EHitAll_E1_4n.png}%
-%             \end{figure}
-%         \end{column}
-%     \end{columns}
-% \end{frame}
-
-% \end{Summary and outlook}
-% % \begin{columns}
-% %     \begin{column}{0.5\textwidth}
-% %     \end{column}
-% %     \begin{column}{0.5\textwidth}
-% %     \end{column}
-% % \end{columns}
 \end{document}
