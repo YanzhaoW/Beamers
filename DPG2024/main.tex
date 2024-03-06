@@ -9,9 +9,9 @@
 \usepackage{ragged2e}
 \usepackage{xcolor}
 \usepackage{amsmath, arydshln, array}
-\usepackage{setspace}
 \usepackage{tikz}
 \usepackage{hyperref}
+% \usepackage{setspace}
 % \usepackage[style=phys, backend=biber, articletitle=false, pageranges=false, citestyle=authoryear]{biblatex}
 \usepackage[natbib=true, style=phys, autocite=footnote, articletitle=false, pageranges=false, citestyle=authoryear]{biblatex}
 \usepackage{perpage} %the perpage package
@@ -31,19 +31,11 @@
 \newcommand{\srcsize}{\@setfontsize{\srcsize}{5pt}{5pt}}
 \makeatother
 \setbeamerfont{footnote}{size=\srcsize}
-% \renewcommand\footnoterule{}
-% \renewcommand{\thempfootnote}{\arabic{footnote}}
-% \usepackage[warnundef]{jabbrv}
-% \DefineJournalAbbreviation{Test}{Tes}
-% \AtEveryCitekey{\iffootnote{\color{red}\scriptsize}{\color{blue}}}
-% \DefineJournalAbbreviation{Nuclear Instruments and Methods in Physics Research Section A: Accelerators, Spectrometers, Detectors and Associated Equipment}{Nucl. Instrum. Methods Phys. Res. A}
-% \DefineJournalAbbreviation{Instruments}{Instrum.}
-% \DefineJournalAbbreviation{Spectrometers,}{Spectro.}
 
 \newcommand{\slfrac}[2]{\left.#1\middle/#2\right.}
 
 
-\title[Millepede algorithm for Time and Position Calibration of NeuLAND]{Application of Millepede algorithm to Time and Position Calibration of NeuLAND}
+\title[Millepede algorithm for the Time and Position Calibration of NeuLAND]{Application of the Millepede algorithm to the Time and Position Calibration of NeuLAND}
 \author[Yanzhao Wang]{Yanzhao Wang, Håkan Johansson, Igor Gasparic, and Andreas Zilges}
 \institute[University of Cologne $\vert$ AG Zilges $\vert$ ]{Institute for Nuclear Physics, University of Cologne}
 \date{\scriptsize HK 51.3 \\DPG-Frühjahrstagung\\Gießen 2024 \\ \vspace{1em} Supported by BMBF (05P21PKFN1)}
@@ -123,7 +115,7 @@
 					\item 26 planes
 					\item $\qtyproduct[product-units=power]{250 x 250}{\centi\meter}$
 					\item 50 scintillators each plane
-					\item 100 PMTs each plane
+					\item 2600 PMTs in total
 				\end{itemize}
 				\pause
 				Measurements:\\
@@ -143,7 +135,7 @@
 \end{frame}
 }
 
-\begin{frame}[t]{Position and time calibration}
+\begin{frame}[t]{Position and time calculation}
 	\vspace{-1cm}
 	\begin{columns}[t]
 		\begin{column}{0.4 \textwidth}
@@ -221,7 +213,7 @@
 			\vspace{0.3cm}
 			\footnotesize{
 				\textit{Minimize}
-				$$ \text{residual}= \sum_i \frac{(x_i - x(t_i, C_1, C_2))}{ 2* \sigma_i^2} $$
+				$$ \text{residual}= \sum_i \frac{(x_i - x(t_i, C_1, C_2))^2}{ 2* \sigma_i^2} $$
 			}
 		\end{column}
 		\pause
@@ -237,11 +229,17 @@
 					t_\mu & = \textcolor{blue}{a^i_t} \cdot z_\mu  + \textcolor{blue}{b^i_t}
 				\end{align}
 			\end{block}
-			\textit{Calibration parameters for the $i$th event:}
-			$$\alert{C_e}, \alert{t_\text{sync}}, \alert{t_\text{offset}}, \textcolor{blue}{a^i_x}, \textcolor{blue}{a^i_y}, \textcolor{blue}{a^i_t}, \textcolor{blue}{b^i_x}, \textcolor{blue}{b^i_y}, \textcolor{blue}{b^i_t}$$
+			\textit{Calibration parameters for the $i$th track:}
+			\vspace{-2em}
+
+			\begin{flalign*}
+				 & \text{\textit{\alert{global parameters}}}:          & \alert{C_e}, \alert{t_\text{sync}}, \alert{t_\text{offset}}                                                                                          \\
+				 & \text{\textit{\textcolor{blue}{local parameters}}}: & \textcolor{blue}{a^i_x}, \textcolor{blue}{a^i_y}, \textcolor{blue}{a^i_t}, \textcolor{blue}{b^i_x}, \textcolor{blue}{b^i_y}, \textcolor{blue}{b^i_t}
+			\end{flalign*}
+
 			\pause
 			\vspace*{1em}
-			\textit{With 10'000 events, the total number of calibration parameters: \alert{\huge 63'900!}}
+			\textit{With 10'000 tracks, the total number of calibration parameters is \alert{\huge 63'900!}}
 		\end{column}
 
 	\end{columns}
@@ -262,17 +260,23 @@
 			\begin{exampleblock}{\small Procedures}
 				\small
 				\begin{enumerate}
+					\setlength\itemsep{0em}
+					\small
 					\item<1-> Obtain the positions of bars with signals
 					\item<2-> Reconstruct the muon track from the bar positions
-					\item<3-> Calculate positions of interaction point of the muon
-					\item<4-> Obtain calibration parameters via data fitting
+					\item<3-> Calculate the positions of the interaction points of the muon
+					\item<4-> Calculate the calibration parameters via data fitting
 				\end{enumerate}
 			\end{exampleblock}
 			\onslide<5->{
-				\textit{\small Data fitting on positions:}\par
+				\vspace*{-0.5em}
+
+				\textit{\small Data fitting in the position calibration:}\par
+				\vspace*{-0.5em}
+
 				\begin{figure}[t]
 					\centering
-					\includegraphics[height = 2cm, width = 5cm]{example-image-golden}
+					\includegraphics[ width = \textwidth]{time_cal.png}
 				\end{figure}
 			}
 		\end{column}
@@ -285,9 +289,10 @@
 		\begin{column}{0.45\textwidth}
 			\vspace*{-2em}
 
+			\pause
 			\begin{block}{\small Residual minimization}
 				\vspace{-1em}
-				$$\large{\partial} \sum^n_{j = 0}\sum_i \frac{\mathcal{Z}^j_i(g_1, ..., g_m, p^j_1, ..., p^j_l)}{ 2 (\sigma^j_i)^2} = 0$$
+				$$\large{\partial} \sum^n_{j = 0}\sum_i \frac{(\mathcal{Z}^j_i(g_1, ..., g_m, p^j_1, ..., p^j_l))^2}{ 2 (\sigma^j_i)^2} = 0$$
 			\end{block}
 			\scriptsize{
 				\vspace*{-2.5em}
@@ -299,9 +304,10 @@
 
 				\vspace*{-1em}
 			}
+			\pause
 			\textit{Newton's method:}
 
-			\vspace*{1em}
+			\vspace*{0.7em}
 			\hspace{3pt}\begin{tikzpicture}[thick]
 				\tikzset{good one/.style={color=black!50!green}}
 				\draw[good one] (-0.3, 0.1) -- (-0.3, -0.1);
@@ -309,7 +315,7 @@
 				\draw[good one] (0.9, 0.1) -- (0.9, -0.1);
 
 				\draw[red] (1.05, 0.1) -- (1.05, -0.1);
-				\draw[<->,red] (1.05, 0) -- node[fill=white]{$\sim n$}(3.2, 0);
+				\draw[<->,red] (1.05, 0) -- node[fill=white]{$\sim n \cdot l$}(3.2, 0);
 				\draw[red] (3.2, 0.1) -- (3.2, -0.1);
 			\end{tikzpicture}
 			\vspace*{-0.9em}
@@ -338,31 +344,42 @@
 
 		\end{column}
 		\begin{column}[t]{0.45\textwidth}
-			\vspace*{-1em}
+			\vspace*{-1.5em}
 
-			\begin{spacing} {0.5}
+			\pause
+			{
 				\small
 				\textbf{\textit{Matrix Dimension reduction!}} (Schur complement method)
+				\vspace*{-0.5em}
+
 				$$\tilde{\mathcal{C}} \cdot \Delta \mathbf{g} = \mathcal{D}$$
+				\vspace*{-1.5em}
+
 				where
+				\vspace*{-1em}
+
 				$$\tilde{\mathcal{C}} = \sum_j \mathcal{C}_j + \sum_j \left(-\mathcal{G}_j \Gamma^{-1}_j \mathcal{G}^T_j \right)$$
-			\end{spacing}
+			}
+			\vspace*{-1em}
+
+			\pause
 			\begin{exampleblock} {Advantages}
 				\small
 				\begin{itemize}
 					\item Simultaneous fitting of all parameters
 					\item Computation complexity independent of local parameter size
-					\item Direct fitting without any approximation
+					\item No muon track reconstruction
 				\end{itemize}
 			\end{exampleblock}
-			\textit{Software implementation}: \large{\textbf{Millepede-II}}\footnotemark
+			\pause
+			\textit{\small Algorithm implementation}: \large{\textbf{Millepede-II}}\footnotemark
 			\footnotetext{\fullcite{millepede}}
 		\end{column}
 	\end{columns}
 
 \end{frame}
 
-\begin{frame}[t]{Comparisons on PMT time offsets}
+\begin{frame}[t]{Comparisons of the PMT time offsets}
 	\begin{figure}[t]
 		\vspace*{-1em}
 		\centering
@@ -370,7 +387,7 @@
 	\end{figure}
 \end{frame}
 
-\begin{frame}[t]{Comparisons on effective speed of light}
+\begin{frame}[t]{Comparisons on time synchronization}
 	\begin{figure}[t]
 		\vspace*{-1em}
 		\centering
@@ -378,7 +395,7 @@
 	\end{figure}
 \end{frame}
 
-\begin{frame}[t]{Comparisons on time synchronization}
+\begin{frame}[t]{Comparisons of the effective speed of light}
 	\begin{figure}[t]
 		\vspace*{-1em}
 		\centering
@@ -387,6 +404,44 @@
 \end{frame}
 
 \begin{frame}[t]{Summary and outlook}
+	\vspace*{-2em}
+
+	\begin{columns}[t]
+		\begin{column}[t]{0.45\textwidth}
+			\begin{alertblock}{\small Summary}
+				\small
+				\begin{itemize}
+					\setlength\itemsep{0em}
+					\item \textbf{Large number} of fitting parameters in time and position calibration
+					\item \textbf{Simultaneous fitting} of local and global parameters using the Millepede algorithm
+					\item \textbf{Consistent results} compared to the current method
+				\end{itemize}
+			\end{alertblock}
+			\begin{block}{\small Outlook}
+				\small
+				\begin{itemize}
+					\setlength\itemsep{0em}
+					\item Apply Millepede algorithm to energy calibration
+					\item Improve precision of calibration parameters
+					\item Possible applications on other detectors in the R$^3$B experiment
+				\end{itemize}
+			\end{block}
+		\end{column}
+		\begin{column}[t]{0.45\textwidth}
+			\begin{figure}[t]
+				\hspace*{-0.5cm}
+				\centering
+				\includegraphics[keepaspectratio, height = 0.3\textheight]{Bar.png}
+			\end{figure}
+			\begin{figure}[t]
+				\centering
+				\includegraphics[keepaspectratio, height = 0.5\textheight]{t_error_diff.png}
+			\end{figure}
+
+		\end{column}
+
+	\end{columns}
 
 \end{frame}
+
 \end{document}

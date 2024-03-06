@@ -18,3 +18,5 @@ clean:
 # %.png:
 # 	sips -g dpiHeight $@
 # 	# echo $@
+
+# rsync -urltv -e ssh gsiana:/u/yanwang/test/test /Users/edwin/Software/test/test
