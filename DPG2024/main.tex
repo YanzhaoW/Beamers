@@ -36,8 +36,8 @@
 
 
 \title[Millepede algorithm for the Time and Position Calibration of NeuLAND]{Application of the Millepede algorithm to the Time and Position Calibration of NeuLAND}
-\author[Yanzhao Wang]{Yanzhao Wang, Håkan Johansson, Igor Gasparic, and Andreas Zilges}
-\institute[University of Cologne $\vert$ AG Zilges $\vert$ ]{Institute for Nuclear Physics, University of Cologne}
+\author[Yanzhao Wang]{Yanzhao Wang\inst{1}, Håkan Johansson\inst{2}, Igor Gasparic\inst{3}, and Andreas Zilges\inst{1}}
+\institute[University of Cologne $\vert$ AG Zilges $\vert$ ]{\inst{1} Institute for Nuclear Physics, University of Cologne \\ \inst{2}Chalmers University of Technology, Sweden  \\ \inst{3} GSI Helmholtzzentrum für Schwerionenforschung}
 \date{\scriptsize HK 51.3 \\DPG-Frühjahrstagung\\Gießen 2024 \\ \vspace{1em} Supported by BMBF (05P21PKFN1)}
 \setbeamertemplate{blocks}[rounded][shadow]
 \setbeamercolor{footlinecolor1}{fg=white,bg=black}
@@ -91,7 +91,7 @@
 \usebackgroundtemplate{\includegraphics[width=\paperwidth]{TitleLogo}}
 \begin{frame}
 	\titlepage
-	\flushright\vspace*{2em}{\tiny Email: \textit{ywang@ikp.uni-koeln.de}}
+	\flushright\vfill{\tiny Email: \textit{ywang@ikp.uni-koeln.de}}
 \end{frame}
 }
 
@@ -112,10 +112,10 @@
 			\begin{exampleblock}{}
 				Geometry:\\
 				\begin{itemize}
-					\item 26 planes
+					\item $26$ planes
 					\item $\qtyproduct[product-units=power]{250 x 250}{\centi\meter}$
-					\item 50 scintillators each plane
-					\item 2600 PMTs in total
+					\item $50$ scintillators each plane
+					\item $2600$ PMTs in total
 				\end{itemize}
 				\pause
 				Measurements:\\
@@ -372,7 +372,7 @@
 				\end{itemize}
 			\end{exampleblock}
 			\pause
-			\textit{\small Algorithm implementation}: \large{\textbf{Millepede-II}}\footnotemark
+			\textit{\small Algorithm implementation}: \large{\textbf{Millepede-II}}
 			\footnotetext{\fullcite{millepede}}
 		\end{column}
 	\end{columns}
@@ -391,7 +391,7 @@
 	\begin{figure}[t]
 		\vspace*{-1em}
 		\centering
-		\includegraphics[height = 0.9 \textheight]{tsync.png}
+		\includegraphics[height = 0.9 \textheight]{tsync_wm.png}
 	\end{figure}
 \end{frame}
 
@@ -399,7 +399,7 @@
 	\begin{figure}[t]
 		\vspace*{-1em}
 		\centering
-		\includegraphics[height = 0.9 \textheight]{effective_c.png}
+		\includegraphics[height = 0.9 \textheight]{effective_c_wm.png}
 	\end{figure}
 \end{frame}
 
