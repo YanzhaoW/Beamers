@@ -10,6 +10,7 @@
 \usepackage{xcolor}
 \usepackage{amsmath, arydshln, array}
 \usepackage{tikz}
+\usetikzlibrary{math}
 \usepackage{hyperref}
 % \usepackage{setspace}
 % \usepackage[style=phys, backend=biber, articletitle=false, pageranges=false, citestyle=authoryear]{biblatex}
@@ -328,10 +329,10 @@
 							\vdots               & 0      & 0             & \ddots \\
 						\end{array}  \right] \cdot
 					\left[ \begin{array}{c}
-							\Delta \mathbf{g}   \\[6pt] \hline\hline
-							\vdots              \\[4pt] \hdashline
-							\Delta \mathbf{p}^j \\[6pt] \hdashline
-							\vdots              \\
+							\alert<+(1)->{\Delta \mathbf{g}} \\[6pt] \hline\hline
+							\vdots                           \\[4pt] \hdashline
+							\Delta \mathbf{p}^j              \\[6pt] \hdashline
+							\vdots                           \\
 						\end{array} \right] =
 					-\left[ \begin{array}{c}
 							\partial_\mathbf{g} \mathcal{Z}     \\[6pt] \hline\hline
@@ -341,7 +342,7 @@
 						\end{array} \right]
 				$$
 			}
-
+			% \pause
 		\end{column}
 		\begin{column}[t]{0.45\textwidth}
 			\vspace*{-1.5em}
@@ -380,10 +381,21 @@
 \end{frame}
 
 \begin{frame}[t]{Comparisons of the PMT time offsets}
-	\begin{figure}[t]
+	\begin{figure}
 		\vspace*{-1em}
 		\centering
-		\includegraphics[height = 0.9 \textheight]{t_diff.png}
+		\begin{tikzpicture}
+			\tikzmath{\LowBound = 0.8;}
+			\coordinate (LeftBound) at (2.94, \LowBound);
+			\coordinate (RightBound) at (3.79, \LowBound);
+			\tikzset{DashedLine/.style={color=black, dashed, thick}};
+			\node[anchor=south west,inner sep=0] at (0, 0){\includegraphics[height = 0.9 \textheight]{t_diff.png}};
+			\node[anchor=north west,inner sep=0,outer sep=0](embedded) at (4, 7.2){
+				\includegraphics[width = 0.3\textwidth]{t_error_diff.png}};
+			\draw (embedded.south west) rectangle (embedded.north east);
+			\draw[DashedLine] (LeftBound) -- (LeftBound |- embedded.center) -- (embedded.north west);
+			\draw[DashedLine] (RightBound) -- (RightBound |- embedded.center) -- (embedded.south west);
+		\end{tikzpicture}
 	\end{figure}
 \end{frame}
 
@@ -434,14 +446,12 @@
 				\includegraphics[keepaspectratio, height = 0.3\textheight]{Bar.png}
 			\end{figure}
 			\begin{figure}[t]
+				\hspace*{-0.5cm}
 				\centering
 				\includegraphics[keepaspectratio, height = 0.5\textheight]{t_error_diff.png}
 			\end{figure}
-
 		\end{column}
-
 	\end{columns}
-
 \end{frame}
 
 \end{document}
