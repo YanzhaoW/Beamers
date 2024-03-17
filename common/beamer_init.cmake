@@ -31,6 +31,9 @@ set(MAIN_AUX "${OUT_DIRECTORY}/${BASE_NAME}.aux")
 file(CREATE_LINK "${CMAKE_CURRENT_SOURCE_DIR}/reference.bib"
      "${OUT_DIRECTORY}/reference.bib" SYMBOLIC)
 
+file(CREATE_LINK "${CMAKE_CURRENT_SOURCE_DIR}/../common/ikpKoeln.cls"
+     "${CMAKE_CURRENT_SOURCE_DIR}/ikpKoeln.cls" SYMBOLIC)
+
 # First pass
 add_custom_target(
   latex-prebuild
