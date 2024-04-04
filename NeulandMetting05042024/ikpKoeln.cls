@@ -1,0 +1,1 @@
+/Users/edwin/Documents/Presentation/Beamers/NeulandMetting05042024/../common/ikpKoeln.cls

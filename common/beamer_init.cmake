@@ -32,7 +32,10 @@ file(CREATE_LINK "${CMAKE_CURRENT_SOURCE_DIR}/reference.bib"
      "${OUT_DIRECTORY}/reference.bib" SYMBOLIC)
 
 file(CREATE_LINK "${CMAKE_CURRENT_SOURCE_DIR}/../common/ikpKoeln.cls"
-     "${CMAKE_CURRENT_SOURCE_DIR}/ikpKoeln.cls" SYMBOLIC)
+"${CMAKE_CURRENT_SOURCE_DIR}/ikpKoeln.cls" SYMBOLIC)
+
+file(CREATE_LINK "${CMAKE_CURRENT_SOURCE_DIR}/../common/ikpKoeln.lua"
+"${CMAKE_CURRENT_SOURCE_DIR}/ikpKoeln.lua" SYMBOLIC)
 
 # First pass
 add_custom_target(
