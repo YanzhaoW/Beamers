@@ -2,7 +2,11 @@
 \usepackage{graphicx}
 \usepackage{physics}
 \usepackage{xcolor}
+\usepackage{amsmath, bm}
+\usepackage{tabularx}
+\usepackage{array, arydshln}
 \usepackage{tikz}
+% \usepackage{enumitem}
 \usetikzlibrary{math}
 
 \scTitle{NeuLAND calibration revisit: Millepede algorithm and error analysis of map2cal calibration}
@@ -16,6 +20,12 @@
 \graphicspath{{../figures/}}
 
 \addbibresource{reference.bib}
+
+\newcommand{\espeed}{C^i_e}
+\newcommand{\espeedi}{C^i_{e0}}
+\newcommand{\tspeed}{C^i_t}
+\newcommand{\tsync}{t^i_{\text{sync}}}
+\newcommand{\toff}{t^i_{\text{offset}}}
 
 \begin{document}
 
@@ -76,6 +86,7 @@
 		\item Multinomial distribution: $f(n), f(n+1) \sim \mathcal{M}_k(3,p_a, p_b), \ p_a = \text{CDF}(n), p_b = \text{PDF}(n)$
 	\end{itemize}
 
+	\pause
 	\flushleft \textbf{Mathematical derivation:}
 	\flushleft {\small Mean:}
 	\scriptsize{
@@ -130,7 +141,7 @@
 \end{frame}
 
 \begin{frame}[t]{NeuLAND time and position calibration}
-    \vspace*{-2em}
+	\vspace*{-2em}
 	\begin{columns}[t]
 		\begin{column}{0.45\textwidth}
 			\begin{block}{\small Time relation:}
@@ -150,6 +161,7 @@
 			\end{itemize}
 
 		\end{column}
+		\pause
 		\begin{column}{0.45\textwidth}
 			\flushleft\textbf{Calibration using muon tracks:}
 			\begin{block}{\small Time and position relation for muon tracks:}
@@ -162,18 +174,306 @@
 					t_\mu & = \textcolor{blue}{a^i_t} \cdot z_\mu  + \textcolor{blue}{b^i_t}
 				\end{align}
 			\end{block}
-			\flushleft\textit{\small Calibration parameters for the $i$th muon track in $n$th bar:}
-			$$\alert{C^n_e}, \alert{t^n_\text{sync}}, \alert{t^n_\text{offset}},\textcolor{blue}{a^i_x}, \textcolor{blue}{a^i_y}, \textcolor{blue}{a^i_t}, \textcolor{blue}{b^i_x}, \textcolor{blue}{b^i_y}, \textcolor{blue}{b^i_t} $$
-			\flushleft\textit{\small Total number of calibration parameters for $m$ muon tracks:} $ 3900 + 6m$
+			\flushleft\textit{\small Calibration parameters for the $j$th muon track in $i$th bar:}
+			$$\alert{C^i_e}, \alert{t^i_\text{sync}}, \alert{t^i_\text{offset}},\textcolor{blue}{a^j_x}, \textcolor{blue}{a^j_y}, \textcolor{blue}{a^j_t}, \textcolor{blue}{b^j_x}, \textcolor{blue}{b^j_y}, \textcolor{blue}{b^j_t} $$
+			\flushleft\textit{\small Total number of calibration parameters for $n$ muon tracks:} $ 3900 + 6n$
 		\end{column}
 	\end{columns}
 \end{frame}
 
 \begin{frame}[t]{Principle of Millepede algorithm}
-    \begin{center}
-        \textbf{Linear regression}
-    \end{center}
-    
+	\vspace*{-2em}
+	\begin{columns}[t]
+		\begin{column}{0.45 \textwidth}
+			\onslide<1->
+			\begin{center}
+				\textbf{Linear regression}
+			\end{center}
+		\end{column}
+		\begin{column}{0.45 \textwidth}
+			\onslide<2>
+			\begin{center}
+				\textbf{Newton's method}
+			\end{center}
+		\end{column}
+	\end{columns}
+	\begin{columns}[t]
+		\begin{column}{0.45 \textwidth}
+			\onslide<1->
+			\begin{block}{\small Residual minimization}
+				\vspace{-1em}
+				$$\large{\partial} \sum^n_{j = 1}\sum^{b(j)}_{i = 1} \frac{(\mathcal{Z}^j_i(g_1, ..., g_m, p^j_1, ..., p^j_l))^2}{ 2 (\sigma^j_i)^2} = 0$$
+			\end{block}
+			{\scriptsize
+			\begin{flalign*}
+				\mathcal{Z}^j_i & : \text{Residual values (linear) for $j$th track and $i$th bar}  & \\
+				g_{1\ldots m}   & : \text{$m$ \textit{global parameters}}                          & \\
+				p^j_{1\ldots l} & : \text{$l$ \textit{local parameters} for the $j$th $\mu$ track} & \\
+				n               & : \text{the total number of $\mu$ tracks}                        & \\
+				b(j)            & : \text{the total number of bars for the $j$th $\mu$ track}      &
+			\end{flalign*}
+
+			\vspace*{-1em}
+			}
+		\end{column}
+		\begin{column}{0.45 \textwidth}
+			\onslide<2>
+			\begin{itemize}
+				\setlength{\itemindent}{-1em}
+				\item \textit{\small Single variable:}
+				      \begin{columns}
+					      \begin{column}{0.6\textwidth}
+						      \begin{figure}
+							      \includegraphics[width = \textwidth]{neulandMeeting/Newton_iteration.png}
+						      \end{figure}
+					      \end{column}
+					      \begin{column}{0.4\textwidth}
+						      \begin{align*}
+							      \delta x & = x_{n+1} - x_n     \\
+							               & = -f(x_n) / f'(x_n)
+						      \end{align*}
+					      \end{column}
+				      \end{columns}
+				\item \textit{\small Multivariable:}
+				      \vspace*{-1em}
+				      $$\nabla f(\vec{x}_n) \cdot \delta \vec{x} = -f(\vec{x}_n)$$
+			\end{itemize}
+
+			\flushleft {\vspace*{-0.5em} \textbf{Residual minimization:}}
+			\vspace*{-1em}
+			\begin{align*}
+				\nabla \vec{f}(\vec{x}_n) & = \nabla(\nabla \mathcal{F}(g_1, ..., g_m, p^j_1, ..., p^j_l)) \\
+				                          & = \textsc{H}\mathcal{F}(g_1, ..., g_m, p^j_1, ..., p^j_l))
+			\end{align*}
+
+			% \flushleft \textit{\small Single variable:}
+			% \vspace*{-1em}
+			% \begin{columns}
+			% 	\begin{column}{0.6\textwidth}
+			% 		\begin{figure}
+			% 			\includegraphics[width = \textwidth]{neulandMeeting/Newton_iteration.png}
+			% 		\end{figure}
+			% 	\end{column}
+			% 	\begin{column}{0.4\textwidth}
+			% 		\begin{align*}
+			% 			\delta x & = x_{n+1} - x_n     \\
+			% 			         & = -f(x_n) / f'(x_n)
+			% 		\end{align*}
+			% 	\end{column}
+			% \end{columns}
+			% \flushleft \textit{\small Multivariable:}
+			% \vspace*{-1em}
+			% $$\nabla f(\vec{x}_n) \cdot \delta \vec{x} = -f(\vec{x}_n)$$
+			% \flushleft {\vspace*{-0.5em} \textbf{Residual minimization:}}
+			% \vspace*{-1em}
+			% \begin{align*}
+			% 	\nabla \vec{f}(\vec{x}_n) & = \nabla(\nabla \mathcal{F}(g_1, ..., g_m, p^j_1, ..., p^j_l)) \\
+			% 	                          & = \textsc{H}\mathcal{F}(g_1, ..., g_m, p^j_1, ..., p^j_l))
+			% \end{align*}
+		\end{column}
+	\end{columns}
 \end{frame}
 
+\begin{frame}[t]{Principle of Millepede algorithm}
+	\vspace*{-0.9em}
+	\begin{columns}[t]
+		\begin{column}{0.5 \textwidth}
+			\begin{block}{\small Hessian operation (second derivative matrix)}
+				\centering
+				$\left[\textsc{H} \mathcal{F}(x_1, x_2, \cdots, x_n)\right]_{ij} = \frac{\partial^2\mathcal{F}}{\partial x_i \partial x_j} \sim \sum\frac{\partial \mathcal{Z}}{\partial x_i}\frac{\partial \mathcal{Z}}{\partial x_j}$
+			\end{block}
+			\textbf{\small Using Newton's method:}
+			\begin{center}
+				$\left[\textsc{H} \mathcal{F}(\boldsymbol{x})\right]\Delta\boldsymbol{x} = - \nabla \mathcal{F}(\boldsymbol{x})$
+			\end{center}
+			% \vspace*{-1em}
+			\hspace{3pt}\begin{tikzpicture}[thick]
+				\tikzset{good one/.style={color=black!50!green}}
+				\draw[good one] (-0.3, 0.1) -- (-0.3, -0.1);
+				\draw[<->,good one] (-0.3, 0) -- node[fill=white]{$m$}(0.9, 0);
+				\draw[good one] (0.9, 0.1) -- (0.9, -0.1);
+
+				\draw[red] (1.05, 0.1) -- (1.05, -0.1);
+				\draw[<->,red] (1.05, 0) -- node[fill=white]{$\sim n \cdot l$}(3.2, 0);
+				\draw[red] (3.2, 0.1) -- (3.2, -0.1);
+			\end{tikzpicture}
+			\vspace*{-0.9em}
+			\setlength\extrarowheight{6pt}
+			\scriptsize{
+				$$ \left[  \begin{array}{c||c:c:c}
+							\sum_j \mathcal{C}_j & \ldots & \mathcal{G}_j & ...    \\[6pt] \hline\hline
+							\vdots               & \ddots & 0             & 0      \\[4pt] \hdashline
+							\mathcal{G}^T_j      & 0      & \Gamma_j      & 0      \\[6pt] \hdashline
+							\vdots               & 0      & 0             & \ddots \\
+						\end{array}  \right] \cdot
+					\left[ \begin{array}{c}
+							\alert{\Delta \mathbf{g}} \\[6pt] \hline\hline
+							\vdots                    \\[4pt] \hdashline
+							\Delta \mathbf{p}^j       \\[6pt] \hdashline
+							\vdots                    \\
+						\end{array} \right] =
+					-\left[ \begin{array}{c}
+							\sum_j\partial_\mathbf{g} \mathcal{F}_j \\[6pt] \hline\hline
+							\vdots                                  \\[4pt] \hdashline
+							\partial_{\mathbf{p}^j} \mathcal{F}     \\[6pt] \hdashline
+							\vdots                                  \\
+						\end{array} \right]
+				$$
+			}
+		\end{column}
+		\pause
+		\begin{column}{0.4 \textwidth}
+			\textbf{\textit{Schur complement method:}}
+			$$\tilde{\mathcal{C}} \cdot \Delta \mathbf{g} = \mathcal{D}$$
+			\vspace*{-1.5em}
+
+			where
+			\vspace*{-1.5em}
+
+			\begin{align*}
+				\tilde{\mathcal{C}} & = \sum_j \mathcal{C}_j + \sum_j \left(-\mathcal{G}_j \Gamma^{-1}_j \mathcal{G}^T_j \right)                       \\
+				\mathcal{D}         & = \sum_j\partial_\mathbf{g} \mathcal{F}_j - \sum_j\mathcal{G}_j \Gamma^{-1}_j\partial_{\mathbf{p}^j} \mathcal{F}
+			\end{align*}
+			\vspace*{-1.5em}
+
+			\begin{exampleblock} {Advantages}
+				\small
+				\begin{itemize}
+					\item Simultaneous fitting of all parameters
+					\item Computation complexity independent of local parameter size
+					\item No muon track reconstruction
+				\end{itemize}
+			\end{exampleblock}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{Millepede algorithm for NeuLAND}
+	\vspace*{-2em}
+	\begin{columns}[t]
+		\begin{column}{0.45 \textwidth}
+			\onslide<1->
+			\begin{center}
+				\textbf{Residual equations for NeuLAND}
+			\end{center}
+		\end{column}
+		\begin{column}{0.45 \textwidth}
+			\onslide<2>
+			\begin{center}
+				\textbf{Linearization}
+			\end{center}
+		\end{column}
+	\end{columns}
+	\begin{columns}[t]
+		\begin{column}{0.5 \textwidth}
+			\onslide<1->
+			\setcounter{equation}{0}
+			{\small
+				\begin{block}{For horizontal bars}
+					\centering
+					\vspace*{-1em}
+					\begin{align}
+						0              & = b_x + \espeed \toff/ 2 + \espeed \Delta t/2 + a_x z_i \\
+						t_\text{sum}/2 & =b_t + \frac{L}{2 \espeed}  + \tsync + a_t z_i          \\
+						y_i            & = b_y + a_y z_i
+					\end{align}
+				\end{block}
+				\begin{block}{For vertical bars}
+					\centering
+					\vspace*{-1em}
+					\begin{align}
+						0              & = b_y + \espeed \toff/ 2 + \espeed \Delta t /2 + a_y z_i \\
+						t_\text{sum}/2 & =b_t + \frac{L}{2 \espeed}  + \tsync + a_t z_i           \\
+						y_i            & = b_x + a_x z_i
+					\end{align}
+				\end{block}
+			}
+		\end{column}
+		\begin{column}{0.45 \textwidth}
+			\onslide<2>
+			\begin{itemize}
+				\item {\scriptsize Parameter redefinition $\tspeed \equiv \espeed \toff$ in Eq. (1, 4):}
+				      \vspace*{-0.5em}
+				      \begin{align*}
+					      0 & = b_x + \espeed \toff/ 2 + \espeed t_\text{diff}/2 + a_x z_i \\
+					        & = b_x + \tspeed/ 2 + \espeed t_\text{diff}/2 + a_x z_i
+				      \end{align*}
+				\item {\scriptsize Taylor expansion of $\espeed$ near $\espeedi$ in Eq. (2, 5):}
+				      \vspace*{-0.5em}
+				      \begin{align*}
+					       & t_\text{sum}/2  =b_t + \frac{L}{2 \espeed}  + \tsync + a_t z_i                                     \\
+					       & \sim b_t + L \left( \frac{1}{\espeedi} - \frac{\espeed}{2(\espeedi)^2} \right)  + \tsync + a_t z_i
+				      \end{align*}
+			\end{itemize}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{First order derivatives of residual equations}
+	\setlength\arraycolsep{1pt}
+	\renewcommand{\arraystretch}{1.}
+	\flushleft \textbf{\textit{Derivatives of all parameters for $i$th bar:}}
+	$$
+		\begin{array}{c||c|c|c|c|c|c||c|c|c|c|c|c|c|c}
+			\text{Eq.} & a_x & a_y & a_t & b_x & b_y & b_t & \tsync\text{\tiny(H)} & \tsync\text{\tiny(V)} & \tspeed \text{\tiny(H)} & \tspeed \text{\tiny(V)} & \espeed \text{\tiny(H)}   & \espeed  \text{\tiny(V)}  & \text{meas}                                 & \text{err}                             \\ \hline
+			\text{(1)} & z_i & 0   & 0   & 1   & 0   & 0   & 0                     & 0                     & \frac{1}{2}             & 0                       & \frac{t_\text{diff}}{2}   & 0                         & 0                                           & \frac{\espeedi}{2}\delta t_\text{diff} \\
+			\text{(4)} & 0   & z_i & 0   & 0   & 1   & 0   & 0                     & 0                     & 0                       & \frac{1}{2}             & 0                         & \frac{t_\text{diff}}{2}   & 0                                           & \frac{\espeedi}{2}\delta t_\text{diff} \\
+			\text{(2)} & 0   & 0   & z_i & 0   & 0   & 1   & 1                     & 0                     & 0                       & 0                       & -\frac{L}{2 (\espeedi)^2} & 0                         & \frac{t_{\text{sum}}}{2}-\frac{L}{\espeedi} & \frac{1}{2}\delta t_{\text{sum}}       \\
+			\text{(5)} & 0   & 0   & z_i & 0   & 0   & 1   & 0                     & 1                     & 0                       & 0                       & 0                         & -\frac{L}{2 (\espeedi)^2} & \frac{t_{\text{sum}}}{2}-\frac{L}{\espeedi} & \frac{1}{2}\delta t_{\text{sum}}       \\
+			\text{(3)} & 0   & z_i & 0   & 0   & 1   & 0   & 0                     & 0                     & 0                       & 0                       & 0                         & 0                         & y_i                                         & w_{\text{\tiny bar}}                   \\
+			\text{(6)} & z_i & 0   & 0   & 1   & 0   & 0   & 0                     & 0                     & 0                       & 0                       & 0                         & 0                         & x_i                                         & w_{\text{\tiny bar}}                   \\
+		\end{array}
+	$$
+
+	{\small
+			Variable names:
+			\vspace*{-2em}
+
+			\begin{columns}[t]
+				\begin{column}{0.4\textwidth}
+					\begin{flalign*}
+						t_{\text{sum}}         & : \text{Summation of the adjacent PMT times}   & \\
+						t_{\text{diff}}        & :  \text{Difference of the adjacent PMT times} & \\
+						\delta t_{\text{sum}}  & : \text{Error value of $t_{\text{sum}}$}       & \\
+						\delta t_{\text{diff}} & :  \text{Error value of $t_{\text{diff}}$}     & \\
+					\end{flalign*}
+				\end{column}
+				\begin{column}{0.4\textwidth}
+					\begin{flalign*}
+						w_{\text{\tiny bar}} & : \text{Width of the $i$th bar}                    & \\
+						x_i, y_i, z_i        & :  \text{$x$, $y$, $z$ positions of the $i$th bar} & \\
+					\end{flalign*}
+				\end{column}
+
+			\end{columns}
+		}
+\end{frame}
+
+\begin{frame}{Integration with \textsc{R3BRoot}}
+	\begin{figure}
+		\includegraphics[width = \textwidth]{neulandMeeting/millepede_integration.png}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Preliminary results from Millepede algorithm}
+	\begin{figure}
+		\centering
+		Comparison of the PMT time offset parameter
+		\includegraphics[width = 0.7\textwidth]{neulandMeeting/t_diff.png}
+	\end{figure}
+\end{frame}
+\begin{frame}{Preliminary results from Millepede algorithm}
+	\begin{figure}
+		\centering
+		Comparison of the scintillator time synchronization
+		\includegraphics[width = 0.7\textwidth]{neulandMeeting/tsync.png}
+	\end{figure}
+\end{frame}
+\begin{frame}{Preliminary results from Millepede algorithm}
+	\begin{figure}
+		\centering
+		Comparison of the scintillator effective of c
+		\includegraphics[width = 0.7\textwidth]{neulandMeeting/effective_c.png}
+	\end{figure}
+\end{frame}
 \end{document}
