@@ -32,10 +32,10 @@ file(CREATE_LINK "${CMAKE_CURRENT_SOURCE_DIR}/reference.bib"
      "${OUT_DIRECTORY}/reference.bib" SYMBOLIC)
 
 file(CREATE_LINK "${CMAKE_CURRENT_SOURCE_DIR}/../common/ikpKoeln.cls"
-"${CMAKE_CURRENT_SOURCE_DIR}/ikpKoeln.cls" SYMBOLIC)
+     "${CMAKE_CURRENT_SOURCE_DIR}/ikpKoeln.cls" SYMBOLIC)
 
 file(CREATE_LINK "${CMAKE_CURRENT_SOURCE_DIR}/../common/ikpKoeln.lua"
-"${CMAKE_CURRENT_SOURCE_DIR}/ikpKoeln.lua" SYMBOLIC)
+     "${CMAKE_CURRENT_SOURCE_DIR}/ikpKoeln.lua" SYMBOLIC)
 
 # First pass
 add_custom_target(
@@ -63,8 +63,8 @@ add_custom_target(
   COMMAND ${BIBTEX_COMPILER} main.aux
   COMMENT "Read and create main bib references file."
   # WORKING_DIRECTORY ${WORKINGDIR}
-  WORKING_DIRECTORY ${OUT_DIRECTORY}
-  DEPENDS ${MAIN_AUX})
+  WORKING_DIRECTORY ${OUT_DIRECTORY})
+# DEPENDS ${MAIN_AUX})
 add_dependencies(latex-bibreferences latex-prebuild)
 
 # Second pass - generate the final pdf.

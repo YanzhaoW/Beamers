@@ -1,0 +1,1 @@
+/Users/edwin/Documents/Presentation/Beamers/R3BCon2024GSI/../common/ikpKoeln.cls
