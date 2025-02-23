@@ -1,0 +1,1 @@
+/Users/edwin/Documents/Presentation/Beamers/DPG2025/../common/ikpKoeln.cls

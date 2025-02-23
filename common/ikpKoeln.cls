@@ -6,6 +6,7 @@
 \RequirePackage{luacode}
 \RequirePackage{luapackageloader}
 \RequirePackage[backend=bibtex, style=phys, autocite=footnote, articletitle=false, pageranges=false, citestyle=authoryear]{biblatex}
+% \RequirePackage[backend=biber, style=numeric, autocite=footnote, citestyle=authoryear, maxcitenames = 1, defernumbers=true]{biblatex}
 
 
 \LoadClass[compress, 13pt, aspectratio=169]{beamer}
