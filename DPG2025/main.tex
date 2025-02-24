@@ -52,8 +52,8 @@
 				\pause
 				Measurements:\\
 				\begin{itemize}
-					\item \alert<+(1)>{\textbf<.(1)>{interaction position}}
-					\item \alert<.(1)>{\textbf<.(1)>{interaction time}}
+					\item interaction position
+					\item interaction time
 					\item energy deposition
 				\end{itemize}
 			\end{exampleblock}
@@ -96,7 +96,7 @@
 				\node (tamex)[process, below left =1cm and -\smallWidth of signal]{TAMEX};
 				\node (second-cal)[process, inner sep = 0mm, below right =1cm and -\smallWidth of physical, xshift = -1.5em]{2nd calibrations};
 				\node (tdc)[process, inner sep = 0mm, below right =1cm and -\smallWidth of signal, xshift=-1.5em]{1st calibration};
-				\node (TDCData)[dataformat, below = 2.5cm of signal]{TDC (channels, module IDs, etc)};
+				\node (TDCData)[dataformat, below = 2.5cm of signal]{TDC (channels, module IDs, etc.)};
 
 				\draw [arrow] (pmt.north |- physical.south) -- (pmt.north);
 				\draw [arrow] (second-cal.north) -- (second-cal.north |- physical.south);
@@ -150,9 +150,9 @@
 			\small
 			{
 				\begin{itemize}
-					\item $T_\text{real}$: Time value relative to START detector.
-					\item $T_\text{coarse}$: Clock cycles with frequency of $\qty{200}{\MHz}$
-					\item $T_\text{fine}$: Fine channel numbers (TDL).
+					\item $T_\text{real}$: Time value relative to START detector
+					\item $T_\text{coarse}$: Clock cycles with a frequency of $\qty{200}{\MHz}$
+					\item $T_\text{fine}$: Fine channel numbers (TDL)
 				\end{itemize}
 			}
 		\end{column}
@@ -161,6 +161,7 @@
 				\captionsetup{labelformat=empty}
 				\vspace{-0.8em}\includegraphics[width = \textwidth]{r3b/TDCFineTime}
 				\caption{\scriptsize Tapped Delay Line (TDL)\footnotemark}
+                \pause
 				\includegraphics[width = \textwidth]{neuland/FineTimeCal}
 				\caption{\scriptsize TDC Calibration (Time resolution $\sim \qty{10}{\pico\second}$)}
 			\end{figure}
@@ -204,6 +205,7 @@
 				}
 			\end{block}
 			\vspace{-0.5em}
+            \pause
 			\begin{alertblock}{\small Energy calibration relations:}
 				\footnotesize{
 					\setlength{\abovedisplayskip}{0pt}
@@ -231,8 +233,8 @@
 			\begin{figure}[t]
 				\includegraphics<1>[width = \textwidth]{R3BCon2024GSI/side_view1.png}
 				\includegraphics<2>[width = \textwidth]{R3BCon2024GSI/side_view2.png}
-				\includegraphics<3-5>[width = \textwidth]{R3BCon2024GSI/side_view3.png}
-				\includegraphics<6>[width = \textwidth]{R3BCon2024GSI/side_view4.png}
+				\includegraphics<3-4>[width = \textwidth]{R3BCon2024GSI/side_view3.png}
+				\includegraphics<5>[width = \textwidth]{R3BCon2024GSI/side_view4.png}
 			\end{figure}
 		\end{column}
 		\begin{column}{0.45 \textwidth}
@@ -247,7 +249,7 @@
 					\item<4-> Calculate the calibration parameters via data fitting
 				\end{enumerate}
 			\end{exampleblock}
-			\onslide<5->{
+			\onslide<4->{
 				\vspace*{-0.5em}
 
 				\textit{\small Data fitting in the position calibration:}\par
@@ -323,23 +325,23 @@
 					\setlength{\belowdisplayskip}{0pt}
 					\setlength{\abovedisplayshortskip}{0pt}
 					\setlength{\belowdisplayshortskip}{0pt}
-					\begin{flalign*}
-						\intertext{Light attenuation effect:}
+					\begin{flalign}
+						\intertext{Light attenuation effect for both PMTs:}
 						I_\text{PMT} & = E_\text{dep} \cdot \exp(-\alert{\alpha} \cdot l)                           \\
 						\intertext{PMT saturation:}
 						I_\text{sat} & = I_\text{PMT} \cdot / \left( 1 + \alert{\lambda} \cdot I_\text{PMT} \right) \\
 						\intertext{PMT gain:}
 						W            & = \alert{\mathcal{G}} \cdot I_\text{sat} + \alert{W_0}
-					\end{flalign*}
+					\end{flalign}
 				}
 			\end{alertblock}
 			\begin{exampleblock}{\small Assumptions}
 				\footnotesize{
 					\begin{enumerate}
 						\setlength\itemsep{0em}
-						\item PMT saturation factor differs gain factor by a constant factor: \vspace{-1em}$$\alert{\lambda} = 0.00175 \times \alert{\mathcal{G}}$$
+						\item PMT saturation factor differs from gain factor by a constant value: \vspace{-1em}$$\alert{\lambda} = 0.00175 \times \alert{\mathcal{G}}$$
 						\item \vspace{-1em}Cosmic muon's stopping power: \qty{1.73}{\mega\electronvolt\per\centi\metre}
-						\item Adjacent PMTs have the same gain factor.
+						\item Adjacent PMTs have the same gain factor
 					\end{enumerate}
 				}
 			\end{exampleblock}
@@ -349,11 +351,11 @@
 			\small{
 				\begin{itemize}
 					\setlength\itemsep{0em}
-					\item PMT baseline $\alert{A_0}$ is determined by minimum cut on signal widths (i.e. trailing time $-$ leading time).
-					\item Attenuation factor is calculated with:
+					\item PMT baseline $\alert{W_0}$ is determined by the minimum cut on signal widths (i.e. trailing time $-$ leading time).
+					\item Calculation of attenuation factor:
 					      \vspace{-0.5em}
-					      $$ \alert{\alpha} = \ln(I^r_\text{PMT}/I^l_\text{PMT}) / (2 \cdot x)$$
-					\item \vspace{-1em}Gain factor is calculated with:
+                          $$ \alert{\alpha} = \ln((W_r - W_0)/(W_l - W_0)) / (2 \cdot x)$$
+					\item \vspace{-1em}Calculation of gain factor:
 					      \vspace{-0.5em}
 					      $$\alert{\mathcal{G}} = \frac{W - \alert{W_0}}{I_\text{PMT} (1 - 0.00175(W - \alert{W_0}))}$$
 				\end{itemize}
@@ -361,8 +363,9 @@
 			\begin{figure}
 				\captionsetup{singlelinecheck=off,font=footnotesize}
 				\vspace{-2em}
-				\caption*{\textit{Saturation effect from real data:}}
-				\includegraphics[width = 0.5\textwidth]{neuland/RealPMTSat}
+				\caption*{\textit{PMT gains from each event:}}
+				\vspace{-1em}
+				\includegraphics[width = 0.5\textwidth]{neuland/PMTGains.png}
 			\end{figure}
 		\end{column}
 	\end{columns}
@@ -386,6 +389,7 @@
 
 				\vspace*{-1em}
 			}
+            \pause
 			\begin{exampleblock} {Features}
 				\small
 				\begin{itemize}
@@ -399,6 +403,7 @@
 			\end{exampleblock}
 		\end{column}
 		\begin{column}{0.45 \textwidth}
+            \pause
 			\begin{figure}
 				\captionsetup{singlelinecheck=off,font=footnotesize}
 				\caption*{\textit{Fine tuning on $C_e$:}}
@@ -420,9 +425,9 @@
 				\begin{enumerate}
 					\setlength\itemsep{0em}
 					\item Principle of digitization processes
-					\item Calibration from TDC to time values
-					\item Calibration from time values to physical values
-					\item Fine tuning with Millepede-II algorithm
+					\item Calibration with TDC for time values
+					\item Calibration with time values for physical values
+					\item Fine tuning with the Millepede-II algorithm
 				\end{enumerate}
 			\end{block}
 			\begin{exampleblock} {\small Outlook}
