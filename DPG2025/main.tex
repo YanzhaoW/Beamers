@@ -160,11 +160,12 @@
 			\begin{figure}
 				\captionsetup{labelformat=empty}
 				\vspace{-0.8em}\includegraphics[width = \textwidth]{r3b/TDCFineTime}
-				\caption{\scriptsize Tapped Delay Line (TDL)\footcite{TDCFINETIME}.}
+				\caption{\scriptsize Tapped Delay Line (TDL)\footnotemark}
 				\includegraphics[width = \textwidth]{neuland/FineTimeCal}
-				\caption{\scriptsize TDC Calibration (Time resolution $\sim \qty{10}{\pico\second}$).}
+				\caption{\scriptsize TDC Calibration (Time resolution $\sim \qty{10}{\pico\second}$)}
 			\end{figure}
-			\vspace*{-1.5em}
+            \vspace{-1.3em}
+            \let\thefootnote\relax\footnotetext{\tiny{[1] \fullcite{TDCFINETIME}}}
 		\end{column}
 	\end{columns}
 \end{frame}
@@ -183,7 +184,8 @@
 				\vspace*{-1em}
 				\includegraphics[width = \textwidth]{neuland/PMTSAT.png}
 			\end{figure}
-			\tiny{[1] \fullcite{Hamamatsu}}
+            \vspace{-1em}
+            \let\thefootnote\relax\footnotetext{\tiny{[1] \fullcite{Hamamatsu}}}
 		\end{column}
 		\begin{column}{0.48 \textwidth}
 			\vspace{-1.5em}
@@ -202,7 +204,7 @@
 				}
 			\end{block}
 			\vspace{-0.5em}
-			\begin{alertblock}{\small Energy calibration:}
+			\begin{alertblock}{\small Energy calibration relations:}
 				\footnotesize{
 					\setlength{\abovedisplayskip}{0pt}
 					\setlength{\belowdisplayskip}{0pt}
@@ -210,11 +212,11 @@
 					\setlength{\belowdisplayshortskip}{0pt}
 					\begin{flalign*}
 						\intertext{Light attenuation effect:}
-						I_\text{PMT} & = E_\text{dep} \cdot \exp(-\alert{\alpha} \cdot l)     \\
-						\intertext{PMT gain:}
-						W            & = \alert{\mathcal{G}} \cdot I_\text{PMT} + \alert{A_0} \\
+						I_\text{PMT} & = E_\text{dep} \cdot \exp(-\alert{\alpha} \cdot l)                           \\
 						\intertext{PMT saturation:}
-						W_\text{sat} & = W \cdot / \left( 1 + \alert{\lambda} \cdot W \right)
+						I_\text{sat} & = I_\text{PMT} \cdot / \left( 1 + \alert{\lambda} \cdot I_\text{PMT} \right) \\
+						\intertext{PMT gain:}
+						W            & = \alert{\mathcal{G}} \cdot I_\text{sat} + \alert{W_0}
 					\end{flalign*}
 				}
 			\end{alertblock}
@@ -306,6 +308,137 @@
 					t_\text{offset} & = b
 				\end{flalign*}
 			}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}[t]{Current energy calibration method (WIP)}
+	\vspace{-1em}
+	\begin{columns}[t]
+		\begin{column}{0.45 \textwidth}
+			\vspace{-1em}
+			\begin{alertblock}{\small Energy calibration relations:}
+				\footnotesize{
+					\setlength{\abovedisplayskip}{0pt}
+					\setlength{\belowdisplayskip}{0pt}
+					\setlength{\abovedisplayshortskip}{0pt}
+					\setlength{\belowdisplayshortskip}{0pt}
+					\begin{flalign*}
+						\intertext{Light attenuation effect:}
+						I_\text{PMT} & = E_\text{dep} \cdot \exp(-\alert{\alpha} \cdot l)                           \\
+						\intertext{PMT saturation:}
+						I_\text{sat} & = I_\text{PMT} \cdot / \left( 1 + \alert{\lambda} \cdot I_\text{PMT} \right) \\
+						\intertext{PMT gain:}
+						W            & = \alert{\mathcal{G}} \cdot I_\text{sat} + \alert{W_0}
+					\end{flalign*}
+				}
+			\end{alertblock}
+			\begin{exampleblock}{\small Assumptions}
+				\footnotesize{
+					\begin{enumerate}
+						\setlength\itemsep{0em}
+						\item PMT saturation factor differs gain factor by a constant factor: \vspace{-1em}$$\alert{\lambda} = 0.00175 \times \alert{\mathcal{G}}$$
+						\item \vspace{-1em}Cosmic muon's stopping power: \qty{1.73}{\mega\electronvolt\per\centi\metre}
+						\item Adjacent PMTs have the same gain factor.
+					\end{enumerate}
+				}
+			\end{exampleblock}
+		\end{column}
+		\begin{column}{0.45 \textwidth}
+			\textit{\footnotesize Calculation of parameters}:
+			\small{
+				\begin{itemize}
+					\setlength\itemsep{0em}
+					\item PMT baseline $\alert{A_0}$ is determined by minimum cut on signal widths (i.e. trailing time $-$ leading time).
+					\item Attenuation factor is calculated with:
+					      \vspace{-0.5em}
+					      $$ \alert{\alpha} = \ln(I^r_\text{PMT}/I^l_\text{PMT}) / (2 \cdot x)$$
+					\item \vspace{-1em}Gain factor is calculated with:
+					      \vspace{-0.5em}
+					      $$\alert{\mathcal{G}} = \frac{W - \alert{W_0}}{I_\text{PMT} (1 - 0.00175(W - \alert{W_0}))}$$
+				\end{itemize}
+			}
+			\begin{figure}
+				\captionsetup{singlelinecheck=off,font=footnotesize}
+				\vspace{-2em}
+				\caption*{\textit{Saturation effect from real data:}}
+				\includegraphics[width = 0.5\textwidth]{neuland/RealPMTSat}
+			\end{figure}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}[t]{Parameter fine tuning with Millepede-II}
+	\vspace{-2em}
+	\begin{columns}[t]
+		\begin{column}{0.45 \textwidth}
+			\begin{block}{\small Residual minimization}
+				\vspace{-1em}
+				$$\large{\partial} \sum^n_{j = 0}\sum_i \frac{(\mathcal{Z}^j_i(g_1, ..., g_m, p^j_1, ..., p^j_l))^2}{ 2 (\sigma^j_i)^2} = 0$$
+			\end{block}
+			\scriptsize{
+				\vspace*{-2.5em}
+				\begin{flalign*}
+					g_{1\ldots m}   & : \text{$m$ \textit{global parameters}}                          & \\
+					p^j_{1\ldots l} & : \text{$l$ \textit{local parameters} for the $j$th $\mu$ track} & \\
+					n               & : \text{the total number of $\mu$ tracks}                        &
+				\end{flalign*}
+
+				\vspace*{-1em}
+			}
+			\begin{exampleblock} {Features}
+				\small
+				\begin{itemize}
+					\setlength\itemsep{0em}
+					\item Simultaneous fitting of all parameters
+					\item Separation to global and local parameters
+					\item Computation complexity independent of local parameter size
+					\item No muon track reconstruction
+					\item Calibration relation \textbf{must be linear}
+				\end{itemize}
+			\end{exampleblock}
+		\end{column}
+		\begin{column}{0.45 \textwidth}
+			\begin{figure}
+				\captionsetup{singlelinecheck=off,font=footnotesize}
+				\caption*{\textit{Fine tuning on $C_e$:}}
+				\vspace{-0.5em}
+				\includegraphics[width = 0.8\textwidth]{neuland/millepede/sim_eff_c.png}
+				\caption*{\textit{Fine tuning on $t_\text{offset}$:}}
+				\vspace{-0.5em}
+				\includegraphics[width = 0.8\textwidth]{neuland/millepede/sim_t_offset.png}
+			\end{figure}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}[t]{Summary and outlook}
+	\vspace{-2em}
+	\begin{columns}[t]
+		\begin{column}{0.45 \textwidth}
+			\begin{block} {\small Summary}
+				\begin{enumerate}
+					\setlength\itemsep{0em}
+					\item Principle of digitization processes
+					\item Calibration from TDC to time values
+					\item Calibration from time values to physical values
+					\item Fine tuning with Millepede-II algorithm
+				\end{enumerate}
+			\end{block}
+			\begin{exampleblock} {\small Outlook}
+				\begin{enumerate}
+					\setlength\itemsep{0em}
+					\item Improve energy calibration
+					\item Apply Millepede-II algorithm on energy-related parameters
+					\item Verify energy parameters via simulation
+				\end{enumerate}
+			\end{exampleblock}
+		\end{column}
+		\begin{column}{0.45 \textwidth}
+			\begin{figure}
+				\includegraphics[width = 0.8\textwidth]{neuland/position_cal/TimeDifference4.png}
+				\includegraphics[width = 0.9\textwidth]{neuland/millepede/sim_eff_c.png}
+			\end{figure}
 		\end{column}
 	\end{columns}
 \end{frame}
