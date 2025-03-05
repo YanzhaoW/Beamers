@@ -41,6 +41,12 @@ class Initializer:
             ),
             self.project_folder.joinpath("ikpKoeln.lua"),
         )
+        os.symlink(
+            self.config_folder.relative_to(self.project_folder, walk_up=True).joinpath(
+                "run"
+            ),
+            self.project_folder.joinpath("run"),
+        )
         shutil.copyfile(
             self.template_folder.joinpath("reference.bib"),
             self.project_folder.joinpath("reference.bib"),

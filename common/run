@@ -1,0 +1,9 @@
+#! python3
+
+import subprocess as sp
+from pathlib import Path
+
+if __name__ == "__main__":
+    Path("./build").mkdir(parents = True, exist_ok = True)
+    sp.run(["cmake", "-S", ".", "-B", "build"], check = True)
+    sp.run(["cmake", "--build", "build"], check = True)

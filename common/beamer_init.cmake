@@ -75,6 +75,13 @@ add_custom_target(
   COMMENT "Assembling the final pdf file."
   DEPENDS ${MAIN_TEX})
 
+add_custom_target(
+  copy-pdf
+  COMMAND cp "main.pdf" "${PROJECT_SOURCE_DIR}/main.pdf"
+  WORKING_DIRECTORY ${OUT_DIRECTORY}
+  COMMENT "Copy the generated pdf to the source folder"
+  DEPENDS latex-pdf)
+
 if(EXISTS ${MAIN_IDX})
   add_dependencies(latex-pdf latex-prebuild latex-makeindex latex-bibreferences)
 else()
@@ -82,4 +89,4 @@ else()
 endif()
 
 add_custom_target(all-formats ALL COMMENT "Starting beamer building.")
-add_dependencies(all-formats latex-pdf)
+add_dependencies(all-formats latex-pdf copy-pdf)
