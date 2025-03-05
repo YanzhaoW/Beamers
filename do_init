@@ -1,0 +1,80 @@
+#! python3
+
+import os
+import shutil
+from pathlib import Path
+
+
+class Initializer:
+    def __init__(self):
+        self.project_name: str = ""
+        self.server: str = ""
+        self.folder: str = ""
+        self.root_folder = Path(os.path.abspath(__file__)).parent.absolute()
+        self.project_folder: Path = Path()
+        self.config_folder = self.root_folder.joinpath("common")
+        self.template_folder = self.root_folder.joinpath("template")
+
+    def create(self):
+        if self.project_name == "":
+            raise NameError("Project name must not be empty")
+        self._create_folder()
+        self._create_cmakelist()
+
+    def prompt(self):
+        self.project_name = input("Enter project name (required): ")
+        self.server = input("Enter server name (optional): ")
+        self.folder = input("Enter server folder path (optional): ")
+        self.project_folder = self.root_folder.joinpath(self.project_name)
+
+    def _create_folder(self):
+        os.mkdir(self.project_folder)
+        os.symlink(
+            self.config_folder.relative_to(self.project_folder, walk_up=True).joinpath(
+                "ikpKoeln.cls"
+            ),
+            self.project_folder.joinpath("ikpKoeln.cls"),
+        )
+        os.symlink(
+            self.config_folder.relative_to(self.project_folder, walk_up=True).joinpath(
+                "ikpKoeln.lua"
+            ),
+            self.project_folder.joinpath("ikpKoeln.lua"),
+        )
+        shutil.copyfile(
+            self.template_folder.joinpath("reference.bib"),
+            self.project_folder.joinpath("reference.bib"),
+        )
+        shutil.copyfile(
+            self.template_folder.joinpath("main.tex"),
+            self.project_folder.joinpath("main.tex"),
+        )
+
+    def _create_cmakelist(self):
+        with open(
+            self.project_folder.joinpath("CMakeLists.txt"), "x", encoding="utf-8"
+        ) as file:
+            file.write(
+                f"""# CMake configuration
+cmake_minimum_required(VERSION 3.24)
+project({self.project_name})
+
+list(APPEND CMAKE_MODULE_PATH ${{CMAKE_CURRENT_SOURCE_DIR}}/../common)
+include(beamer_init)"""
+            )
+
+    def print(self):
+        print(
+            f"""
+Project name: {self.project_name}
+Shared folder path: {self.server}:{self.folder}
+root path: {self.root_folder}
+config path: {self.config_folder}
+              """
+        )
+
+
+if __name__ == "__main__":
+    initor = Initializer()
+    initor.prompt()
+    initor.create()
