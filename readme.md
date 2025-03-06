@@ -9,9 +9,10 @@ This repository contains my presentation sides for the past conferences and meet
 
 Following packages are required to compile a project:
 
-- Lualatex
+- Texlive (or BasicTex if using MacOS)
 - CMake
 - Any Latex package manager
+- Latex packages (see below)
 
 ## Quick start
 
@@ -30,6 +31,44 @@ Following packages are required to compile a project:
     ```
 
     This calls `cmake` commands to compile the Latex code. If the compilation is successful, the generated PDF file, `main.pdf`, will also be copied into the source folder.
+
+## Required Latex Packages
+
+- `utopia`
+- `fourier`
+- `greek-fontenc`
+- `luacode`
+- `luapackageloader`
+- `biblatex`
+- `biblatex-phys`
+- `physics`
+- `siunitx`
+
+## Tips
+
+### Adjust the gap among items
+
+```latex
+\begin{itemize}
+    \setlength\itemsep{0em}
+    \item First item
+    \item Second item
+    \item Third item
+\end{itemize}
+```
+
+This reduce the gap to 0.
+
+### Item animation with transparency
+
+```latex
+\begin{enumerate}
+    \setbeamercovered{transparent}
+    \item<1-> First item
+    \item<2-> Second item
+    \item<3-> Third item
+\end{enumerate}
+```
 
 ## TODO list
 

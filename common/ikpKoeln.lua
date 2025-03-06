@@ -5,6 +5,7 @@ M.main_author_name = ""
 M.affiliations = {}
 M.title = ""
 M.title_short = ""
+M.email = ""
 
 M.add_author_name = function(input)
     table.insert(M.author_names,

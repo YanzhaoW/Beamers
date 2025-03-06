@@ -4,7 +4,8 @@
 \usepackage{xcolor}
 \usepackage{tikz}
 \usepackage{siunitx}
-\usepackage[font=scriptsize,skip=0pt]{caption}
+\usepackage[font=normalsize,skip=0pt]{caption}
+\usepackage{luacode}
 \usetikzlibrary{math, shapes.geometric, arrows, positioning}
 
 \scTitle{An overview of data calibration algorithms of NeuLAND\\ in the R$^3$B setup}
@@ -14,12 +15,25 @@
 \scAuthor{}{Andreas}{Zilges}{1}
 \scAffiliation{1}{University of Cologne, Institute for Nuclear Physics, Germany}
 \scAffiliation{2}{GSI Helmholtzzentrum für Schwerionenforschung, Germany}
+\scEmail{ywang@ikp.uni-koeln.de}
 
 \scTitleShort{Data calibration algorithms of NeuLAND}
 
 \date{\scriptsize HK 44.4 \\DPG-Frühjahrstagung\\Cologne 2025 \\ \vspace{1em} Supported by BMBF (05P21PKFN1)}
 
 \graphicspath{{../figures/}}
+
+\DeclareSourcemap
+{
+    \maps[datatype=bibtex,overwrite=true]
+    {
+        \map{
+        \step[fieldsource=journal,
+           match={Nuclear Instruments and Methods in Physics Research, Section A: Accelerators, Spectrometers, Detectors, and Associated Equipment},
+           replace={Nucl. Instrum. Methods Phys. Res., Sect. A}]
+            }
+    }
+}
 
 \addbibresource{reference.bib}
 
@@ -30,7 +44,7 @@
 {
 \usebackgroundtemplate{%
 	\includegraphics[width=\paperwidth, height=\paperheight]{r3b/r3bsetup_empty.png}}
-\begin{frame}{NeuLAND setup in $\text{R}^3\text{B}$}
+\begin{frame}{NeuLAND setup in $\text{R}^3\text{B}$\footfullcite{BORETZKY}}
 
 	\begin{columns}[c]
 		\begin{column}{0.4\textwidth}
@@ -61,7 +75,7 @@
 		\begin{column}{0.3\textwidth}
 		\end{column}
 	\end{columns}
-	\let\thefootnote\relax\footnotetext{\fullcite{BORETZKY}}
+	% \let\thefootnote\relax\footnotetext{\fullcite{BORETZKY}}
 \end{frame}
 }
 
@@ -115,8 +129,7 @@
 \end{frame}
 
 \begin{frame}[t]{Time measurement and TDC calibration}
-	\vspace{-0.8em}
-	\begin{columns}
+	\begin{columns}[c]
 		\begin{column}{0.45 \textwidth}
 			\def\upperHeight{1.5cm}
 			\def\lowerHeight{1cm}
@@ -126,21 +139,26 @@
 			\def\signalPos{33mm}
 			\def\CTHeight{-5mm}
 
-			\textbf{\textit{Time measurement with clocks:}}
-			\begin{tikzpicture}
-				\draw [<-, >=stealth](0, \upperHeight) node[above, rotate=90]{\textit{\scriptsize CLK}}-- (0, -\lowerHeight);
-				\draw [->, >=stealth](0, 0) -- node[very near end, below]{\scriptsize time}(\totalWidth, 0);
+			\vspace{-2em}
+			\begin{figure}
+				\captionsetup{singlelinecheck=off,font=normalsize}
+				\caption*{\textbf{\textit{Time measurement with clocks:}}}
+				\vspace{-0.5em}
+				\begin{tikzpicture}
+					\draw [<-, >=stealth](0, \upperHeight) node[above, rotate=90]{\textit{\scriptsize CLK}}-- (0, -\lowerHeight);
+					\draw [->, >=stealth](0, 0) -- node[very near end, below]{\scriptsize time}(\totalWidth, 0);
 
-				\draw[thick] (0,0)
-				\foreach \x in {1,...,2}{
-						-- ++(0,\clockHight) -- ++(\clockWidth, 0) -- ++(0,-\clockHight) -- ++(\clockWidth,0)
-					} -- ++(0,\clockHight) -- ++(\clockWidth, 0);
-				\draw[thick, dashed] (\signalPos, \upperHeight) -- node[left, very near start, yshift = 1em]{trigger}(\signalPos, -\lowerHeight);
-				\draw[thick, ->, >=stealth, red] (0, \CTHeight) -- node[below]{Coarse time} (40mm, \CTHeight);
-				\draw[thick, <->, >=stealth, red] (\signalPos, -\CTHeight) -- node[above, yshift = 1.3em, xshift = 1.2em, name=fineTime]{Fine time} (40mm, -\CTHeight);
-				\draw[red]({0.5*\signalPos + 20mm}, -\CTHeight) -- ([xshift=-1em]fineTime.south);
-				\draw[thick, red] (40mm, {\CTHeight+1mm}) -- (40mm, {\CTHeight-1mm});
-			\end{tikzpicture}
+					\draw[thick] (0,0)
+					\foreach \x in {1,...,2}{
+							-- ++(0,\clockHight) -- ++(\clockWidth, 0) -- ++(0,-\clockHight) -- ++(\clockWidth,0)
+						} -- ++(0,\clockHight) -- ++(\clockWidth, 0);
+					\draw[thick, dashed] (\signalPos, \upperHeight) -- node[left, very near start, yshift = 1em]{trigger}(\signalPos, -\lowerHeight);
+					\draw[thick, ->, >=stealth, red] (0, \CTHeight) -- node[below]{Coarse time} (40mm, \CTHeight);
+					\draw[thick, <->, >=stealth, red] (\signalPos, -\CTHeight) -- node[above, yshift = 1.3em, xshift = 1.2em, name=fineTime]{Fine time} (40mm, -\CTHeight);
+					\draw[red]({0.5*\signalPos + 20mm}, -\CTHeight) -- ([xshift=-1em]fineTime.south);
+					\draw[thick, red] (40mm, {\CTHeight+1mm}) -- (40mm, {\CTHeight-1mm});
+				\end{tikzpicture}
+			\end{figure}
 
 			\textbf{\textit{Real time calculation:}}
 
@@ -158,15 +176,14 @@
 		\end{column}
 		\begin{column}{0.5 \textwidth}
 			\begin{figure}
-				\captionsetup{labelformat=empty}
 				\vspace{-0.8em}\includegraphics[width = \textwidth]{r3b/TDCFineTime}
-				\caption{\scriptsize Tapped Delay Line (TDL)\footnotemark}
-                \pause
-				\includegraphics[width = \textwidth]{neuland/FineTimeCal}
-				\caption{\scriptsize TDC Calibration (Time resolution $\sim \qty{10}{\pico\second}$)}
+				\caption*{Tapped Delay Line (TDL)\footfullcite{TDCFINETIME}}
+				\onslide<2>{
+					\includegraphics[width = \textwidth]{neuland/FineTimeCal}
+					\caption*{TDC Calibration (Time resolution $\sim \qty{10}{\pico\second}$)}
+				}
 			\end{figure}
-            \vspace{-1.3em}
-            \let\thefootnote\relax\footnotetext{\tiny{[1] \fullcite{TDCFINETIME}}}
+			\vspace{-2.3em}
 		\end{column}
 	\end{columns}
 \end{frame}
@@ -181,104 +198,61 @@
 				\includegraphics[width = \textwidth]{R3BCon2024GSI/Bar.png}
 				\captionsetup{singlelinecheck=off,font=footnotesize}
 				\vspace*{0.5em}
-				\caption*{\textit{PMT saturation effect\footnotemark:}}
+				\caption*{\textit{PMT saturation effect\footfullcite{Hamamatsu}:}}
 				\vspace*{-1em}
 				\includegraphics[width = \textwidth]{neuland/PMTSAT.png}
 			\end{figure}
-            \vspace{-1em}
-            \let\thefootnote\relax\footnotetext{\tiny{[1] \fullcite{Hamamatsu}}}
+			\vspace{-1em}
 		\end{column}
 		\begin{column}{0.48 \textwidth}
-			\vspace{-1.5em}
-			\begin{block}{\small Position-Time calibration:}
-				\footnotesize{
-					\setlength{\abovedisplayskip}{0pt}
-					\setlength{\belowdisplayskip}{0pt}
-					\setlength{\abovedisplayshortskip}{0pt}
-					\setlength{\belowdisplayshortskip}{0pt}
-					\begin{flalign*}
-						\intertext{Interaction time:}
-						t & = \frac{t_r + t_l}{2} - \frac{L}{2 \cdot \alert{C_e}} + \alert{t_\text{sync}} \\
-						\intertext{Interaction position:}
-						x & = \frac{\alert{C_e}}{2}\left( t_r - t_l  + \alert{t_\text{offset}} \right)
-					\end{flalign*}
-				}
+			\vspace{-1em}
+			\begin{block}{Position-Time calibration:}
+				\setlength{\abovedisplayskip}{0pt}
+				\setlength{\belowdisplayskip}{0pt}
+				\setlength{\abovedisplayshortskip}{0pt}
+				\setlength{\belowdisplayshortskip}{0pt}
+				\begin{flalign*}
+					\intertext{Interaction time:}
+					t & = \frac{t_r + t_l}{2} - \frac{L}{2 \cdot \alert{C_e}} + \alert{t_\text{sync}} \\
+					\intertext{Interaction position:}
+					x & = \frac{\alert{C_e}}{2}\left( t_r - t_l  + \alert{t_\text{offset}} \right)
+				\end{flalign*}
 			\end{block}
 			\vspace{-0.5em}
-            \pause
-			\begin{alertblock}{\small Energy calibration relations:}
-				\footnotesize{
-					\setlength{\abovedisplayskip}{0pt}
-					\setlength{\belowdisplayskip}{0pt}
-					\setlength{\abovedisplayshortskip}{0pt}
-					\setlength{\belowdisplayshortskip}{0pt}
-					\begin{flalign*}
-						\intertext{Light attenuation effect:}
-						I_\text{PMT} & = E_\text{dep} \cdot \exp(-\alert{\alpha} \cdot l)                           \\
-						\intertext{PMT saturation:}
-						I_\text{sat} & = I_\text{PMT} \cdot / \left( 1 + \alert{\lambda} \cdot I_\text{PMT} \right) \\
-						\intertext{PMT gain:}
-						W            & = \alert{\mathcal{G}} \cdot I_\text{sat} + \alert{W_0}
-					\end{flalign*}
-				}
+			\pause
+			\begin{alertblock}{Energy calibration relations:}
+				\setlength{\abovedisplayskip}{0pt}
+				\setlength{\belowdisplayskip}{0pt}
+				\setlength{\abovedisplayshortskip}{0pt}
+				\setlength{\belowdisplayshortskip}{0pt}
+				\begin{flalign*}
+					\intertext{Light attenuation effect:}
+					I_\text{PMT} & = E_\text{dep} \cdot \exp(-\alert{\alpha} \cdot l)                           \\
+					\intertext{PMT saturation:}
+					I_\text{sat} & = I_\text{PMT} \cdot / \left( 1 + \alert{\lambda} \cdot I_\text{PMT} \right) \\
+					\intertext{PMT gain:}
+					W            & = \alert{\mathcal{G}} \cdot I_\text{sat} + \alert{W_0}
+				\end{flalign*}
 			\end{alertblock}
 		\end{column}
 	\end{columns}
 \end{frame}
 
-\begin{frame}[t]{Current position calibration}
-	\vspace*{-2em}
-	\begin{columns}[t]
-		\begin{column}{0.45 \textwidth}
-			\begin{figure}[t]
-				\includegraphics<1>[width = \textwidth]{R3BCon2024GSI/side_view1.png}
-				\includegraphics<2>[width = \textwidth]{R3BCon2024GSI/side_view2.png}
-				\includegraphics<3-4>[width = \textwidth]{R3BCon2024GSI/side_view3.png}
-				\includegraphics<5>[width = \textwidth]{R3BCon2024GSI/side_view4.png}
-			\end{figure}
-		\end{column}
-		\begin{column}{0.45 \textwidth}
-			\begin{exampleblock}{\small Procedures}
-				\small
-				\begin{enumerate}
-					\setlength\itemsep{0em}
-					\small
-					\item<1-> Obtain the positions of bars with signals
-					\item<2-> Reconstruct the muon track from the bar positions
-					\item<3-> Calculate the positions of the interaction points of the muon
-					\item<4-> Calculate the calibration parameters via data fitting
-				\end{enumerate}
-			\end{exampleblock}
-			\onslide<4->{
-				\vspace*{-0.5em}
-
-				\textit{\small Data fitting in the position calibration:}\par
-				\vspace*{-0.5em}
-
-				\begin{figure}[t]
-					\centering
-					\includegraphics[ width = \textwidth]{R3BCon2024GSI/time_cal.png}
-				\end{figure}
-			}
-		\end{column}
-	\end{columns}
-\end{frame}
-
 \begin{frame}[t]{New position calibration}
-	\vspace {-2em}
+	\vspace {-2.5em}
 	\begin{columns}[t]
 		\begin{column}{0.45 \textwidth}
 			\begin{figure}
-				\captionsetup{singlelinecheck=off,font=footnotesize}
-				\caption*{\textit{Time differences of adjacent PMTs:}}
+				\captionsetup{singlelinecheck=off}
+				\caption*{\textit{\textbf{Time differences of adjacent PMTs:}}}
 				\vspace{-0.5em}
-				\includegraphics[width = \textwidth]{R3BCon2024GSI/total_tdiff.png}
+				\includegraphics[width = \textwidth]{neuland/TimeDiffDist.png}
 			\end{figure}
 			\vspace{-1em}
 			\begin{block}{Calibration steps:}
 				\begin{enumerate}
 					\setlength\itemsep{0em}
-					\small
+					\setbeamercovered{transparent}
 					\item<1-> Collect time differences of adjacent PMT signals
 					\item<2-> Normalize the distribution and convert to the CDF for each bar
 					\item<3-> Linear fitting of the CDF within its quantiles of 0.05 to 0.95
@@ -287,8 +261,8 @@
 		\end{column}
 		\begin{column}{0.45 \textwidth}
 			\begin{figure}
-				\captionsetup{singlelinecheck=off,font=footnotesize}
-				\caption*{\textit{Parameter fitting:}}
+				\captionsetup{singlelinecheck=off}
+				\caption*{\textit{\textbf{Parameter fitting:}}}
 				\vspace*{-0.5em}
 				\includegraphics<1>[width = 0.9\textwidth]{neuland/position_cal/TimeDifference2.png}
 				\includegraphics<2>[width = 0.9\textwidth]{neuland/position_cal/TimeDifference3.png}
@@ -296,7 +270,6 @@
 			\end{figure}
 			\onslide<3->
 			{
-				\footnotesize
 				\setlength{\abovedisplayskip}{0pt}
 				\setlength{\belowdisplayskip}{0pt}
 				\setlength{\abovedisplayshortskip}{0pt}
@@ -315,55 +288,51 @@
 \end{frame}
 
 \begin{frame}[t]{Current energy calibration method (WIP)}
-	\vspace{-1em}
-	\begin{columns}[t]
+	\begin{columns}[c]
 		\begin{column}{0.45 \textwidth}
-			\vspace{-1em}
-			\begin{alertblock}{\small Energy calibration relations:}
-				\footnotesize{
-					\setlength{\abovedisplayskip}{0pt}
-					\setlength{\belowdisplayskip}{0pt}
-					\setlength{\abovedisplayshortskip}{0pt}
-					\setlength{\belowdisplayshortskip}{0pt}
-					\begin{flalign}
-						\intertext{Light attenuation effect for both PMTs:}
-						I_\text{PMT} & = E_\text{dep} \cdot \exp(-\alert{\alpha} \cdot l)                           \\
-						\intertext{PMT saturation:}
-						I_\text{sat} & = I_\text{PMT} \cdot / \left( 1 + \alert{\lambda} \cdot I_\text{PMT} \right) \\
-						\intertext{PMT gain:}
-						W            & = \alert{\mathcal{G}} \cdot I_\text{sat} + \alert{W_0}
-					\end{flalign}
-				}
+			\vspace{-1.5em}
+			\begin{alertblock}{Energy calibration relations}
+				\setlength{\abovedisplayskip}{0pt}
+				\setlength{\belowdisplayskip}{0pt}
+				\setlength{\abovedisplayshortskip}{0pt}
+				\setlength{\belowdisplayshortskip}{0pt}
+				\begin{flalign}
+					\intertext{Light attenuation effect for both PMTs:}
+					I_\text{PMT} & = E_\text{dep} \cdot \exp(-\alert{\alpha} \cdot l)                                           \\
+					\intertext{PMT saturation:}
+					I_\text{sat} & = \left. I_\text{PMT} \middle/ \left( 1 + \alert{\lambda} \cdot I_\text{PMT} \right) \right. \\
+					\intertext{PMT gain:}
+					W            & = \alert{\mathcal{G}} \cdot I_\text{sat} + \alert{W_0}
+				\end{flalign}
 			\end{alertblock}
-			\begin{exampleblock}{\small Assumptions}
-				\footnotesize{
-					\begin{enumerate}
-						\setlength\itemsep{0em}
-						\item PMT saturation factor differs from gain factor by a constant value: \vspace{-1em}$$\alert{\lambda} = 0.00175 \times \alert{\mathcal{G}}$$
-						\item \vspace{-1em}Cosmic muon's stopping power: \qty{1.73}{\mega\electronvolt\per\centi\metre}
-						\item Adjacent PMTs have the same gain factor
-					\end{enumerate}
-				}
+			\vspace{-0.5em}
+			\begin{exampleblock}{Assumptions}
+				\begin{itemize}
+					\setlength\itemsep{0em}
+					\item PMT saturation factor differs from gain factor by a constant value: \vspace{-1em}$$\alert{\lambda} = 0.00175 \times \alert{\mathcal{G}}$$
+					\item \vspace{-1em}Cosmic muon's stopping power is \qty{1.73}{\mega\electronvolt\per\centi\metre}
+					\item Adjacent PMTs have the same gain factor
+				\end{itemize}
 			\end{exampleblock}
 		\end{column}
 		\begin{column}{0.45 \textwidth}
-			\textit{\footnotesize Calculation of parameters}:
-			\small{
+			\textit{\textbf{Calculation of parameters:}}
+			{\small
 				\begin{itemize}
 					\setlength\itemsep{0em}
 					\item PMT baseline $\alert{W_0}$ is determined by the minimum cut on signal widths (i.e. trailing time $-$ leading time).
 					\item Calculation of attenuation factor:
 					      \vspace{-0.5em}
-                          $$ \alert{\alpha} = \ln((W_r - W_0)/(W_l - W_0)) / (2 \cdot x)$$
+					      $$ \left. \alert{\alpha} = \ln((W_r - W_0) \middle/ (W_l - W_0)) \middle/ (2 \cdot x) \right.$$
 					\item \vspace{-1em}Calculation of gain factor:
 					      \vspace{-0.5em}
-					      $$\alert{\mathcal{G}} = \frac{W - \alert{W_0}}{I_\text{PMT} (1 - 0.00175(W - \alert{W_0}))}$$
+					      $$\alert{\mathcal{G}} = \frac{W - \alert{W_0}}{I_\text{PMT} \left(1 - 0.00175(W - \alert{W_0})\right)}$$
 				\end{itemize}
 			}
 			\begin{figure}
-				\captionsetup{singlelinecheck=off,font=footnotesize}
+				\captionsetup{singlelinecheck=off}
 				\vspace{-2em}
-				\caption*{\textit{PMT gains from each event:}}
+				\caption*{\textit{\textbf{PMT gains from each event:}}}
 				\vspace{-1em}
 				\includegraphics[width = 0.5\textwidth]{neuland/PMTGains.png}
 			\end{figure}
@@ -375,25 +344,22 @@
 	\vspace{-2em}
 	\begin{columns}[t]
 		\begin{column}{0.45 \textwidth}
-			\begin{block}{\small Residual minimization}
-				\vspace{-1em}
-				$$\large{\partial} \sum^n_{j = 0}\sum_i \frac{(\mathcal{Z}^j_i(g_1, ..., g_m, p^j_1, ..., p^j_l))^2}{ 2 (\sigma^j_i)^2} = 0$$
+			\begin{block}{Residual minimization}
+				$$\partial \sum^n_{j = 0}\sum_i \frac{(\mathcal{Z}^j_i(g_1, ..., g_m, p^j_1, ..., p^j_l))^2}{ 2 (\sigma^j_i)^2} = 0$$
 			\end{block}
-			\scriptsize{
-				\vspace*{-2.5em}
-				\begin{flalign*}
-					g_{1\ldots m}   & : \text{$m$ \textit{global parameters}}                          & \\
-					p^j_{1\ldots l} & : \text{$l$ \textit{local parameters} for the $j$th $\mu$ track} & \\
-					n               & : \text{the total number of $\mu$ tracks}                        &
-				\end{flalign*}
+			{\scriptsize
+			\vspace*{-2.5em}
+			\begin{flalign*}
+				g_{1\ldots m}   & : \text{$m$ \textit{global parameters}}                          & \\
+				p^j_{1\ldots l} & : \text{$l$ \textit{local parameters} for the $j$th $\mu$ track} & \\
+				n               & : \text{the total number of $\mu$ tracks}                        &
+			\end{flalign*}
 
-				\vspace*{-1em}
+			\vspace*{-1em}
 			}
-            \pause
+			\pause
 			\begin{exampleblock} {Features}
-				\small
 				\begin{itemize}
-					\setlength\itemsep{0em}
 					\item Simultaneous fitting of all parameters
 					\item Separation to global and local parameters
 					\item Computation complexity independent of local parameter size
@@ -403,7 +369,7 @@
 			\end{exampleblock}
 		\end{column}
 		\begin{column}{0.45 \textwidth}
-            \pause
+			\pause
 			\begin{figure}
 				\captionsetup{singlelinecheck=off,font=footnotesize}
 				\caption*{\textit{Fine tuning on $C_e$:}}
@@ -418,25 +384,25 @@
 \end{frame}
 
 \begin{frame}[t]{Summary and outlook}
-	\vspace{-2em}
-	\begin{columns}[t]
+	\vspace{-1em}
+	\begin{columns}[c]
 		\begin{column}{0.45 \textwidth}
-			\begin{block} {\small Summary}
-				\begin{enumerate}
-					\setlength\itemsep{0em}
+			\begin{block} {Summary}
+				\begin{itemize}
+					\setlength\itemsep{0.5em}
 					\item Principle of digitization processes
 					\item Calibration with TDC for time values
 					\item Calibration with time values for physical values
 					\item Fine tuning with the Millepede-II algorithm
-				\end{enumerate}
+				\end{itemize}
 			\end{block}
-			\begin{exampleblock} {\small Outlook}
-				\begin{enumerate}
-					\setlength\itemsep{0em}
+			\begin{exampleblock} {Outlook}
+				\begin{itemize}
+					\setlength\itemsep{0.5em}
 					\item Improve energy calibration
 					\item Apply Millepede-II algorithm on energy-related parameters
 					\item Verify energy parameters via simulation
-				\end{enumerate}
+				\end{itemize}
 			\end{exampleblock}
 		\end{column}
 		\begin{column}{0.45 \textwidth}
@@ -444,6 +410,43 @@
 				\includegraphics[width = 0.8\textwidth]{neuland/position_cal/TimeDifference4.png}
 				\includegraphics[width = 0.9\textwidth]{neuland/millepede/sim_eff_c.png}
 			\end{figure}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}[t]{Current position calibration}
+	\vspace*{-2em}
+	\begin{columns}[t]
+		\begin{column}{0.45 \textwidth}
+			\begin{figure}[t]
+				\includegraphics<1>[width = \textwidth]{R3BCon2024GSI/side_view1.png}
+				\includegraphics<2>[width = \textwidth]{R3BCon2024GSI/side_view2.png}
+				\includegraphics<3-4>[width = \textwidth]{R3BCon2024GSI/side_view3.png}
+				\includegraphics<5>[width = \textwidth]{R3BCon2024GSI/side_view4.png}
+			\end{figure}
+		\end{column}
+		\begin{column}{0.45 \textwidth}
+			\begin{exampleblock}{Procedures}
+				\begin{enumerate}
+					\setlength\itemsep{0em}
+					\setbeamercovered{transparent}
+					\item<1-> Obtain the positions of bars with signals
+					\item<2-> Reconstruct the muon track from the bar positions
+					\item<3-> Calculate the positions of the interaction points of the muon
+					\item<4-> Calculate the calibration parameters via data fitting
+				\end{enumerate}
+			\end{exampleblock}
+			\onslide<4->{
+				\vspace*{-0.5em}
+
+				\textit{Data fitting in the position calibration:}\par
+				\vspace*{-0.5em}
+
+				\begin{figure}[t]
+					\centering
+					\includegraphics[ width = \textwidth]{R3BCon2024GSI/time_cal.png}
+				\end{figure}
+			}
 		\end{column}
 	\end{columns}
 \end{frame}

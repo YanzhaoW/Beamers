@@ -5,18 +5,22 @@
 \RequirePackage{xcolor}
 \RequirePackage{luacode}
 \RequirePackage{luapackageloader}
-\RequirePackage[backend=bibtex, style=phys, autocite=footnote, articletitle=false, pageranges=false, citestyle=authoryear]{biblatex}
-% \RequirePackage[backend=biber, style=numeric, autocite=footnote, citestyle=authoryear, maxcitenames = 1, defernumbers=true]{biblatex}
+% \RequirePackage[backend=bibtex, style=phys, autocite=footnote, articletitle=false, pageranges=false, citestyle=authoryear]{biblatex}
+\RequirePackage[backend=biber, style=phys, autocite=footnote, articletitle=false, pageranges=false, citestyle=authoryear]{biblatex}
 
 
-\LoadClass[compress, 13pt, aspectratio=169]{beamer}
+\LoadClass[compress, 10pt, aspectratio=169, noamssymb, serif]{beamer}
 \usetheme{Madrid}
 
-\usefonttheme[onlymath]{serif}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{fourier}
+
+% \usefonttheme[onlymath]{serif}
 % \MakePerPage{footnote}
 \urlstyle{sf}
 \newcommand{\srcsize}{\@setfontsize{\srcsize}{5pt}{5pt}}
 \newcommand{\slfrac}[2]{\left.#1\middle/#2\right.}
+
 
 \usecolortheme{default}
 
@@ -46,6 +50,18 @@
 	\vskip0pt%
 }
 
+% change the shape of itemize and enumerate
+\setbeamertemplate{itemize items}[square]
+\setbeamertemplate{enumerate items}[default]
+
+% setup the footnote number in a square bracket
+\setbeamerfont{footnote}{size=\scriptsize}
+\makeatletter
+\renewcommand\thempfootnote{\arabic{mpfootnote}}
+\renewcommand\@makefnmark{\hbox{\@textsuperscript{\usebeamercolor[fg]{footnote mark}\usebeamerfont*{footnote mark}[\@thefnmark]}}}
+% \renewcommand\@makefntext[1]{\@textsuperscript{\usebeamercolor[fg]{footnote mark}\usebeamerfont*{footnote mark}[\@thefnmark]}\enspace\usebeamerfont*{footnote} #1}
+\makeatother
+
 \renewbibmacro*{name:andothers}{% Based on name:andothers from biblatex.def
 	\ifboolexpr{
 		test {\ifnumequal{\value{listcount}}{\value{liststop}}}
@@ -59,26 +75,25 @@
 	{}
 }
 
-\luadirect{TitlePage = require("ikpKoeln")}
+\luadirect{
+	TitlePage = require("ikpKoeln")
+	JabbrConverter = require("jabbrConverter")
+}
 
 \newcommand*{\scAffiliation}[2]{\luadirect{
-		TitlePage.add_affiliation(
-		{
+		TitlePage.add_affiliation({
 				id = \luastring{#1},
 				affiliation = \luastring{#2},
-			}
-		)
+			})
 	}}
 
 \newcommand*{\scAuthor}[4]{\luadirect{
-		TitlePage.add_author_name(
-		{
+		TitlePage.add_author_name({
 				is_stared = \luastring{#1},
 				first_name = \luastring{#2},
 				family_name = \luastring{#3},
 				affiliation_number = \luastring{#4}
-			}
-		)
+			})
 	}}
 
 \newcommand*{\scTitle}[1]{\luadirect{
@@ -88,6 +103,17 @@
 \newcommand*{\scTitleShort}[1]{\luadirect{
 		TitlePage.title_short = \luastring{#1}
 	}}
+
+\newcommand*{\scEmail}[1]{\luadirect{
+		TitlePage.email = \luastring{#1}
+	}}
+
+\newcommand*{\useJabbr}[1]{
+	\luadirect{
+        tex.print(JabbrConverter.convert(\luastring{#1}))
+        % texio.write(JabbrConverter.convert(\luastring{#1}))
+	}
+}
 
 \AtBeginDocument{
 	\luadirect{
@@ -99,8 +125,10 @@
 	{
 		\usebackgroundtemplate{\includegraphics[width=\paperwidth]{TitleLogo}}
 		\begin{frame}
+			\fontsize{13}{7.2}\selectfont
 			\titlepage
-			\flushright\vfill{\tiny Email: \textit{ywang@ikp.uni-koeln.de}}
+			\vfill
+			\flushright{\tiny Email: \textit{\luadirect{tex.print(TitlePage.email)}}}
 		\end{frame}
 	}
 }

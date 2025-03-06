@@ -1,10 +1,12 @@
-find_package(LATEX COMPONENTS LUALATEX BIBTEX MAKEINDEX)
+find_package(LATEX COMPONENTS LUALATEX BIBTEX MAKEINDEX BIBER)
 
 if(LATEX_FOUND
    AND LATEX_LUALATEX_FOUND
-   AND LATEX_BIBTEX_FOUND)
+   AND LATEX_BIBTEX_FOUND
+   AND LATEX_BIBER_FOUND)
   message(STATUS "Path to lualatex compiler: ${LUALATEX_COMPILER}")
   message(STATUS "Path to bibtex compiler: ${BIBTEX_COMPILER}")
+  message(STATUS "Path to biber compiler: ${BIBER_COMPILER}")
 else()
   message(ERROR "No latex compiler is found!")
 endif()
@@ -60,7 +62,8 @@ add_dependencies(latex-makeindex latex-prebuild)
 # Generate what citation found in the latex file.
 add_custom_target(
   latex-bibreferences
-  COMMAND ${BIBTEX_COMPILER} main.aux
+  # COMMAND ${BIBTEX_COMPILER} main.aux
+  COMMAND ${BIBER_COMPILER} main
   COMMENT "Read and create main bib references file."
   # WORKING_DIRECTORY ${WORKINGDIR}
   WORKING_DIRECTORY ${OUT_DIRECTORY})
