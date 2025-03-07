@@ -70,6 +70,18 @@ This reduce the gap to 0.
 \end{enumerate}
 ```
 
+### Display picture animation
+
+```latex
+\begin{figure}
+    \includegraphics<1>[width = 0.9\textwidth]{DPG2025/TimeDifference_0.png}%
+    \includegraphics<2>[width = 0.9\textwidth]{DPG2025/TimeDifference_1.png}%
+    \includegraphics<3>[width = 0.9\textwidth]{DPG2025/TimeDifference_2.png}%
+\end{figure}
+```
+
+Important: The `%` is required to prevent the picture spuriously shifting the right.
+
 ## TODO list
 
 - rsync with picture folder from the server

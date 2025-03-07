@@ -39,6 +39,13 @@ file(CREATE_LINK "${CMAKE_CURRENT_SOURCE_DIR}/../common/ikpKoeln.cls"
 file(CREATE_LINK "${CMAKE_CURRENT_SOURCE_DIR}/../common/ikpKoeln.lua"
      "${CMAKE_CURRENT_SOURCE_DIR}/ikpKoeln.lua" SYMBOLIC)
 
+# copy pictures
+add_custom_target(
+  sync_picture_folder
+  COMMAND rsync -av ${SERVER_NAME}:${FIG_DESTINATION}/
+          "${CMAKE_CURRENT_SOURCE_DIR}/../figures/${PROJECT_NAME}"
+  COMMENT "copy the pictures from the server to a local folder in figures")
+
 # First pass
 add_custom_target(
   latex-prebuild
@@ -48,7 +55,7 @@ add_custom_target(
           -interaction=nonstopmode ${MAIN_TEX}
   COMMENT "Starting Prebuild."
   WORKING_DIRECTORY ${WORKINGDIR}
-  DEPENDS ${MAIN_TEX})
+  DEPENDS ${MAIN_TEX} sync_picture_folder)
 
 # Generate the indices for the index table.
 add_custom_target(
@@ -56,7 +63,7 @@ add_custom_target(
   COMMAND ${MAKEINDEX_COMPILER} ${MAIN_IDX}
   WORKING_DIRECTORY ${OUT_DIRECTORY}
   COMMENT "Read and create indices with ${MAIN_IDX}."
-  DEPENDS ${MAIN_IDX})
+  DEPENDS ${MAIN_IDX} sync_picture_folder)
 add_dependencies(latex-makeindex latex-prebuild)
 
 # Generate what citation found in the latex file.
@@ -76,7 +83,7 @@ add_custom_target(
   COMMAND ${TEX_COMPILER} -output-directory ${OUT_DIRECTORY} ${MAIN_TEX}
   WORKING_DIRECTORY ${WORKINGDIR}
   COMMENT "Assembling the final pdf file."
-  DEPENDS ${MAIN_TEX})
+  DEPENDS ${MAIN_TEX} sync_picture_folder)
 
 add_custom_target(
   copy-pdf
