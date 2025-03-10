@@ -36,6 +36,9 @@
 		\center\usebeamerfont{frametitle}\insertframetitle
 	\end{beamercolorbox}
 }
+
+% footline settings:
+\setbeamerfont{footline}{size=\scriptsize\selectfont}
 \setbeamertemplate{footline}
 {
 	\leavevmode%

@@ -6,7 +6,7 @@
 \usepackage{siunitx}
 \usepackage[font=normalsize,skip=0pt]{caption}
 \usepackage{luacode}
-\usetikzlibrary{math, shapes.geometric, arrows, positioning}
+\usetikzlibrary{math, shapes.geometric, arrows, positioning, decorations.markings}
 
 \scTitle{An overview of data calibration algorithms of NeuLAND\\ in the R$^3$B setup}
 \scAuthor{*}{Yanzhao}{Wang}{1}
@@ -121,14 +121,20 @@
 				\draw [arrow] (tamex.south) -- (tamex.south |- TDCData.north);
 				\draw [arrow] (second-cal.south |- TDCData.north) -- (second-cal.south |- tdc.south);
 
-				\draw [dashed, ->, >=stealth](physical.west) -- ([xshift=-0.5em]physical.west) -- node[above, rotate = 90]{\textit{Data digitization}}([xshift=-0.5em]TDCData.west) -- (TDCData.west);
-				\draw [dashed, ->, >=stealth](TDCData.east) -- ([xshift=0.6em]TDCData.east) -- node[above, rotate = -90]{\textit{Data calibration}}([xshift=0.6em]physical.east) -- (physical.east);
+				\begin{scope}[decoration={
+								markings,
+								mark=at position 0.5 with {\arrow[scale=2, >=stealth]{>}}}
+					]
+					\draw [dashed, -,  postaction={decorate}](physical.west) -- ([xshift=-0.5em]physical.west) -- node[above, rotate = 90]{\textbf{\textit{Data digitization}}}([xshift=-0.5em]TDCData.west) -- (TDCData.west);
+					\draw [dashed, -,  postaction={decorate}](TDCData.east) -- ([xshift=0.6em]TDCData.east) -- node[above, rotate = -90]{\textbf{\textit{Data calibration}}}([xshift=0.6em]physical.east) -- (physical.east);
+				\end{scope}
 			\end{tikzpicture}
 		\end{column}
 	\end{columns}
 \end{frame}
 
 \begin{frame}[t]{Time measurement and TDC calibration}
+	\vspace{-0.5em}
 	\begin{columns}[c]
 		\begin{column}{0.45 \textwidth}
 			\def\upperHeight{1.5cm}
@@ -197,7 +203,7 @@
 				\vspace*{-0.5em}
 				\includegraphics[width = \textwidth]{R3BCon2024GSI/Bar.png}
 				\captionsetup{singlelinecheck=off,font=footnotesize}
-				\vspace*{0.5em}
+				\vspace*{0.2em}
 				\caption*{\textit{PMT saturation effect\footfullcite{Hamamatsu}:}}
 				\vspace*{-1em}
 				\includegraphics[width = \textwidth]{neuland/PMTSAT.png}
@@ -288,6 +294,7 @@
 \end{frame}
 
 \begin{frame}[t]{Current energy calibration method (WIP)}
+	\vspace*{-0.5em}
 	\begin{columns}[c]
 		\begin{column}{0.45 \textwidth}
 			\vspace{-1.5em}
@@ -334,7 +341,7 @@
 				\vspace{-2em}
 				\caption*{\textit{\textbf{PMT gains from each event:}}}
 				\vspace{-1em}
-				\includegraphics[width = 0.5\textwidth]{neuland/PMTGains.png}
+				\includegraphics[width = 0.9\textwidth]{DPG2025/EnergyGain.png}
 			\end{figure}
 		\end{column}
 	\end{columns}
@@ -344,21 +351,7 @@
 	\vspace{-2em}
 	\begin{columns}[t]
 		\begin{column}{0.45 \textwidth}
-			\begin{block}{Residual minimization}
-				$$\partial \sum^n_{j = 0}\sum_i \frac{(\mathcal{Z}^j_i(g_1, ..., g_m, p^j_1, ..., p^j_l))^2}{ 2 (\sigma^j_i)^2} = 0$$
-			\end{block}
-			{\scriptsize
-			\vspace*{-2.5em}
-			\begin{flalign*}
-				g_{1\ldots m}   & : \text{$m$ \textit{global parameters}}                          & \\
-				p^j_{1\ldots l} & : \text{$l$ \textit{local parameters} for the $j$th $\mu$ track} & \\
-				n               & : \text{the total number of $\mu$ tracks}                        &
-			\end{flalign*}
-
-			\vspace*{-1em}
-			}
-			\pause
-			\begin{exampleblock} {Features}
+			\begin{exampleblock} {Characteristics}
 				\begin{itemize}
 					\item Simultaneous fitting of all parameters
 					\item Separation to global and local parameters
@@ -367,17 +360,21 @@
 					\item Calibration relation \textbf{must be linear}
 				\end{itemize}
 			\end{exampleblock}
+
+			\begin{figure}
+				\vspace{-0.5em}
+				\includegraphics[width =\textwidth]{DPG2025/SilliconPixel.png}
+				\caption*{Alignment of silicon pixel detectors \footfullcite{REIDEL2019142}}
+			\end{figure}
+			\vspace{-2.2em}
 		\end{column}
 		\begin{column}{0.45 \textwidth}
 			\pause
 			\begin{figure}
-				\captionsetup{singlelinecheck=off,font=footnotesize}
-				\caption*{\textit{Fine tuning on $C_e$:}}
+				\captionsetup{singlelinecheck=off}
+				\caption*{Parameter fine tuning on $C_e$ in NeuLAND:}
 				\vspace{-0.5em}
-				\includegraphics[width = 0.8\textwidth]{neuland/millepede/sim_eff_c.png}
-				\caption*{\textit{Fine tuning on $t_\text{offset}$:}}
-				\vspace{-0.5em}
-				\includegraphics[width = 0.8\textwidth]{neuland/millepede/sim_t_offset.png}
+				\includegraphics[width = \textwidth]{DPG2025/sim_comp_c.png}
 			\end{figure}
 		\end{column}
 	\end{columns}
