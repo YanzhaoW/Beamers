@@ -19,7 +19,7 @@
 
 \scTitleShort{Data calibration algorithms of NeuLAND}
 
-\date{\scriptsize HK 44.4 \\DPG-Frühjahrstagung\\Cologne 2025 \\ \vspace{1em} Supported by BMBF (05P21PKFN1)}
+\date{\scriptsize HK 44.4 \\DPG-Frühjahrstagung\\Cologne 2025 \\ \vspace{1em} Supported by BMBF (05P24PK1)}
 
 \graphicspath{{../figures/}}
 
@@ -106,7 +106,7 @@
 
 				\node (physical)[dataformat]{Physical data (energy, time and position)};
 				\node (pmt)[process, below left =1cm and -\smallWidth of physical]{PMT, FQT};
-				\node (signal)[dataformat, below = 2.5cm of physical,]{Signals (leading and trailing edges)};
+				\node (signal)[dataformat, below = 2.5cm of physical,]{Logic signals (leading and trailing edges)};
 				\node (tamex)[process, below left =1cm and -\smallWidth of signal]{TAMEX};
 				\node (second-cal)[process, inner sep = 0mm, below right =1cm and -\smallWidth of physical, xshift = -1.5em]{2nd calibrations};
 				\node (tdc)[process, inner sep = 0mm, below right =1cm and -\smallWidth of signal, xshift=-1.5em]{1st calibration};
@@ -175,7 +175,7 @@
 			{
 				\begin{itemize}
 					\item $T_\text{real}$: Time value relative to START detector
-					\item $T_\text{coarse}$: Clock cycles with a frequency of $\qty{200}{\MHz}$
+					\item $T_\text{coarse}$: Clock cycles with a frequency of $\qty{200}{\MHz}$ ($\text{period} = \qty{5}{\nano\second}$)
 					\item $T_\text{fine}$: Fine channel numbers (TDL)
 				\end{itemize}
 			}
@@ -194,76 +194,31 @@
 	\end{columns}
 \end{frame}
 
-\begin{frame}[t]{Position, time and energy calibration parameters}
-	\vspace*{-1em}
-	\begin{columns}
-		\begin{column}{0.4 \textwidth}
-			\begin{figure}[t]
-				\centering
-				\vspace*{-0.5em}
-				\includegraphics[width = \textwidth]{R3BCon2024GSI/Bar.png}
-				\captionsetup{singlelinecheck=off,font=footnotesize}
-				\vspace*{0.2em}
-				\caption*{\textit{PMT saturation effect\footfullcite{Hamamatsu}:}}
-				\vspace*{-1em}
-				\includegraphics[width = \textwidth]{neuland/PMTSAT.png}
-			\end{figure}
-			\vspace{-1em}
-		\end{column}
-		\begin{column}{0.48 \textwidth}
-			\vspace{-1em}
-			\begin{block}{Position-Time calibration:}
-				\setlength{\abovedisplayskip}{0pt}
-				\setlength{\belowdisplayskip}{0pt}
-				\setlength{\abovedisplayshortskip}{0pt}
-				\setlength{\belowdisplayshortskip}{0pt}
-				\begin{flalign*}
-					\intertext{Interaction time:}
-					t & = \frac{t_r + t_l}{2} - \frac{L}{2 \cdot \alert{C_e}} + \alert{t_\text{sync}} \\
-					\intertext{Interaction position:}
-					x & = \frac{\alert{C_e}}{2}\left( t_r - t_l  + \alert{t_\text{offset}} \right)
-				\end{flalign*}
-			\end{block}
-			\vspace{-0.5em}
-			\pause
-			\begin{alertblock}{Energy calibration relations:}
-				\setlength{\abovedisplayskip}{0pt}
-				\setlength{\belowdisplayskip}{0pt}
-				\setlength{\abovedisplayshortskip}{0pt}
-				\setlength{\belowdisplayshortskip}{0pt}
-				\begin{flalign*}
-					\intertext{Light attenuation effect:}
-					I_\text{PMT} & = E_\text{dep} \cdot \exp(-\alert{\alpha} \cdot l)                           \\
-					\intertext{PMT saturation:}
-					I_\text{sat} & = I_\text{PMT} \cdot / \left( 1 + \alert{\lambda} \cdot I_\text{PMT} \right) \\
-					\intertext{PMT gain:}
-					W            & = \alert{\mathcal{G}} \cdot I_\text{sat} + \alert{W_0}
-				\end{flalign*}
-			\end{alertblock}
-		\end{column}
-	\end{columns}
-\end{frame}
-
-\begin{frame}[t]{New position calibration}
+\begin{frame}[t]{Position calibration from cosmic muons}
 	\vspace {-2.5em}
 	\begin{columns}[t]
 		\begin{column}{0.45 \textwidth}
-			\begin{figure}
-				\captionsetup{singlelinecheck=off}
-				\caption*{\textit{\textbf{Time differences of adjacent PMTs:}}}
-				\vspace{-0.5em}
-				\includegraphics[width = \textwidth]{DPG2025/TimeDiffDist.png}
-			\end{figure}
-			\vspace{-1em}
-			\begin{block}{Calibration steps:}
+			\begin{block}{Calibration relations}
+				\setlength{\abovedisplayskip}{0pt}
+				\setlength{\belowdisplayskip}{0pt}
+				\setlength{\abovedisplayshortskip}{0pt}
+				\setlength{\belowdisplayshortskip}{0pt}
+				\begin{flalign}
+					\intertext{Interaction position:}
+					x & = \frac{\alert{C_e}}{2}\left( t_r - t_l  + \alert{t_\text{offset}} \right)    \\
+					\intertext{Interaction time:}
+					t & = \frac{t_r + t_l}{2} - \frac{L}{2 \cdot \alert{C_e}} + \alert{t_\text{sync}}
+				\end{flalign}
+			\end{block}
+			\begin{exampleblock}{Position calibration steps}
 				\begin{enumerate}
 					\setlength\itemsep{0em}
 					\setbeamercovered{transparent}
-					\item<1-> Collect time differences of adjacent PMT signals
+					\item<1-> Collect time difference values of adjacent PMT signals from cosmic muons
 					\item<2-> Normalize the distribution and convert to the CDF for each bar
 					\item<3-> Linear fitting of the CDF within its quantiles of 0.05 to 0.95
 				\end{enumerate}
-			\end{block}
+			\end{exampleblock}
 		\end{column}
 		\begin{column}{0.45 \textwidth}
 			\begin{figure}
@@ -294,6 +249,7 @@
 \end{frame}
 
 \begin{frame}[t]{Current energy calibration method (WIP)}
+	\setcounter{equation}{0}
 	\vspace*{-0.5em}
 	\begin{columns}[c]
 		\begin{column}{0.45 \textwidth}
@@ -304,11 +260,11 @@
 				\setlength{\abovedisplayshortskip}{0pt}
 				\setlength{\belowdisplayshortskip}{0pt}
 				\begin{flalign}
-					\intertext{Light attenuation effect for both PMTs:}
+					\intertext{PMT signal amplitude:}
 					I_\text{PMT} & = E_\text{dep} \cdot \exp(-\alert{\alpha} \cdot l)                                           \\
-					\intertext{PMT saturation:}
+					\intertext{Applying PMT saturation effect:}
 					I_\text{sat} & = \left. I_\text{PMT} \middle/ \left( 1 + \alert{\lambda} \cdot I_\text{PMT} \right) \right. \\
-					\intertext{PMT gain:}
+					\intertext{Logic signal width:}
 					W            & = \alert{\mathcal{G}} \cdot I_\text{sat} + \alert{W_0}
 				\end{flalign}
 			\end{alertblock}
@@ -316,7 +272,7 @@
 			\begin{exampleblock}{Assumptions}
 				\begin{itemize}
 					\setlength\itemsep{0em}
-					\item PMT saturation factor differs from gain factor by a constant value: \vspace{-1em}$$\alert{\lambda} = 0.00175 \times \alert{\mathcal{G}}$$
+					\item PMT saturation factor is proportional to the gain factor: \vspace{-1em}$$\alert{\lambda} = 0.00175 \times \alert{\mathcal{G}}$$
 					\item \vspace{-1em}Cosmic muon's stopping power is \qty{1.73}{\mega\electronvolt\per\centi\metre}
 					\item Adjacent PMTs have the same gain factor
 				\end{itemize}
@@ -327,7 +283,7 @@
 			{\small
 				\begin{itemize}
 					\setlength\itemsep{0em}
-					\item PMT baseline $\alert{W_0}$ is determined by the minimum cut on signal widths (i.e. trailing time $-$ leading time).
+					\item Signal width baseline $\alert{W_0}$ is determined by the minimum cut on signal widths (i.e. trailing time $-$ leading time).
 					\item Calculation of attenuation factor:
 					      \vspace{-0.5em}
 					      $$ \left. \alert{\alpha} = \ln((W_r - W_0) \middle/ (W_l - W_0)) \middle/ (2 \cdot x) \right.$$
@@ -339,7 +295,7 @@
 			\begin{figure}
 				\captionsetup{singlelinecheck=off}
 				\vspace{-2em}
-				\caption*{\textit{\textbf{PMT gains from each event:}}}
+				\caption*{\textit{\textbf{PMT gains from all events:}}}
 				\vspace{-1em}
 				\includegraphics[width = 0.9\textwidth]{DPG2025/EnergyGain.png}
 			\end{figure}
@@ -356,7 +312,7 @@
 					\item Simultaneous fitting of all parameters
 					\item Separation to global and local parameters
 					\item Computation complexity independent of local parameter size
-					\item No muon track reconstruction
+					\item \alert{\textbf{No particle track reconstruction}}
 					\item Calibration relation \textbf{must be linear}
 				\end{itemize}
 			\end{exampleblock}
@@ -411,40 +367,91 @@
 	\end{columns}
 \end{frame}
 
-\begin{frame}[t]{Current position calibration}
-	\vspace*{-2em}
-	\begin{columns}[t]
-		\begin{column}{0.45 \textwidth}
-			\begin{figure}[t]
-				\includegraphics<1>[width = \textwidth]{R3BCon2024GSI/side_view1.png}
-				\includegraphics<2>[width = \textwidth]{R3BCon2024GSI/side_view2.png}
-				\includegraphics<3-4>[width = \textwidth]{R3BCon2024GSI/side_view3.png}
-				\includegraphics<5>[width = \textwidth]{R3BCon2024GSI/side_view4.png}
-			\end{figure}
-		\end{column}
-		\begin{column}{0.45 \textwidth}
-			\begin{exampleblock}{Procedures}
-				\begin{enumerate}
-					\setlength\itemsep{0em}
-					\setbeamercovered{transparent}
-					\item<1-> Obtain the positions of bars with signals
-					\item<2-> Reconstruct the muon track from the bar positions
-					\item<3-> Calculate the positions of the interaction points of the muon
-					\item<4-> Calculate the calibration parameters via data fitting
-				\end{enumerate}
-			\end{exampleblock}
-			\onslide<4->{
-				\vspace*{-0.5em}
+% \begin{frame}[t]{Current position calibration}
+% 	\vspace*{-2em}
+% 	\begin{columns}[t]
+% 		\begin{column}{0.45 \textwidth}
+% 			\begin{figure}[t]
+% 				\includegraphics<1>[width = \textwidth]{R3BCon2024GSI/side_view1.png}
+% 				\includegraphics<2>[width = \textwidth]{R3BCon2024GSI/side_view2.png}
+% 				\includegraphics<3-4>[width = \textwidth]{R3BCon2024GSI/side_view3.png}
+% 				\includegraphics<5>[width = \textwidth]{R3BCon2024GSI/side_view4.png}
+% 			\end{figure}
+% 		\end{column}
+% 		\begin{column}{0.45 \textwidth}
+% 			\begin{exampleblock}{Procedures}
+% 				\begin{enumerate}
+% 					\setlength\itemsep{0em}
+% 					\setbeamercovered{transparent}
+% 					\item<1-> Obtain the positions of bars with signals
+% 					\item<2-> Reconstruct the muon track from the bar positions
+% 					\item<3-> Calculate the positions of the interaction points of the muon
+% 					\item<4-> Calculate the calibration parameters via data fitting
+% 				\end{enumerate}
+% 			\end{exampleblock}
+% 			\onslide<4->{
+% 				\vspace*{-0.5em}
 
-				\textit{Data fitting in the position calibration:}\par
-				\vspace*{-0.5em}
+% 				\textit{Data fitting in the position calibration:}\par
+% 				\vspace*{-0.5em}
 
-				\begin{figure}[t]
-					\centering
-					\includegraphics[ width = \textwidth]{R3BCon2024GSI/time_cal.png}
-				\end{figure}
-			}
-		\end{column}
-	\end{columns}
-\end{frame}
+% 				\begin{figure}[t]
+% 					\centering
+% 					\includegraphics[ width = \textwidth]{R3BCon2024GSI/time_cal.png}
+% 				\end{figure}
+% 			}
+% 		\end{column}
+% 	\end{columns}
+% \end{frame}
+
+% \begin{frame}[t]{Position, time and energy calibration parameters}
+% 	\vspace*{-1em}
+% 	\begin{columns}
+% 		\begin{column}{0.4 \textwidth}
+% 			\begin{figure}[t]
+% 				\centering
+% 				\vspace*{-0.5em}
+% 				\includegraphics[width = \textwidth]{R3BCon2024GSI/Bar.png}
+% 				\captionsetup{singlelinecheck=off,font=footnotesize}
+% 				\vspace*{0.2em}
+% 				\caption*{\textit{PMT saturation effect\footfullcite{Hamamatsu}:}}
+% 				\vspace*{-1em}
+% 				\includegraphics[width = \textwidth]{neuland/PMTSAT.png}
+% 			\end{figure}
+% 			\vspace{-1em}
+% 		\end{column}
+% 		\begin{column}{0.48 \textwidth}
+% 			\vspace{-1em}
+% 			\begin{block}{Position-Time calibration:}
+% 				\setlength{\abovedisplayskip}{0pt}
+% 				\setlength{\belowdisplayskip}{0pt}
+% 				\setlength{\abovedisplayshortskip}{0pt}
+% 				\setlength{\belowdisplayshortskip}{0pt}
+% 				\begin{flalign*}
+% 					\intertext{Interaction time:}
+% 					t & = \frac{t_r + t_l}{2} - \frac{L}{2 \cdot \alert{C_e}} + \alert{t_\text{sync}} \\
+% 					\intertext{Interaction position:}
+% 					x & = \frac{\alert{C_e}}{2}\left( t_r - t_l  + \alert{t_\text{offset}} \right)
+% 				\end{flalign*}
+% 			\end{block}
+% 			\vspace{-0.5em}
+% 			\pause
+% 			\begin{alertblock}{Energy calibration relations:}
+% 				\setlength{\abovedisplayskip}{0pt}
+% 				\setlength{\belowdisplayskip}{0pt}
+% 				\setlength{\abovedisplayshortskip}{0pt}
+% 				\setlength{\belowdisplayshortskip}{0pt}
+% 				\begin{flalign*}
+% 					\intertext{Light attenuation effect:}
+% 					I_\text{PMT} & = E_\text{dep} \cdot \exp(-\alert{\alpha} \cdot l)                           \\
+% 					\intertext{PMT saturation:}
+% 					I_\text{sat} & = I_\text{PMT} \cdot / \left( 1 + \alert{\lambda} \cdot I_\text{PMT} \right) \\
+% 					\intertext{PMT gain:}
+% 					W            & = \alert{\mathcal{G}} \cdot I_\text{sat} + \alert{W_0}
+% 				\end{flalign*}
+% 			\end{alertblock}
+% 		\end{column}
+% 	\end{columns}
+% \end{frame}
+
 \end{document}
