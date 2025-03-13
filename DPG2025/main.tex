@@ -106,7 +106,7 @@
 
 				\node (physical)[dataformat]{Physical data (energy, time and position)};
 				\node (pmt)[process, below left =1cm and -\smallWidth of physical]{PMT, FQT};
-				\node (signal)[dataformat, below = 2.5cm of physical,]{Logic signals (leading and trailing edges)};
+				\node (signal)[dataformat, below = 2.5cm of physical,]{Shaped signals (leading and trailing edges)};
 				\node (tamex)[process, below left =1cm and -\smallWidth of signal]{TAMEX};
 				\node (second-cal)[process, inner sep = 0mm, below right =1cm and -\smallWidth of physical, xshift = -1.5em]{2nd calibrations};
 				\node (tdc)[process, inner sep = 0mm, below right =1cm and -\smallWidth of signal, xshift=-1.5em]{1st calibration};
@@ -240,8 +240,8 @@
 					\intertext{Fitting function:}
 					y               & = a \cdot x + 0.5 - a \cdot b       \\
 					\intertext{Calculation of parameters:}
-					C_e             & = 2 \cdot a \cdot \text{bar length} \\
-					t_\text{offset} & = b
+                    \alert{C_e}             & = 2 \cdot a \cdot \text{bar length} \\
+                    \alert{t_\text{offset}} & = b
 				\end{flalign*}
 			}
 		\end{column}
@@ -310,8 +310,7 @@
 			\begin{exampleblock} {Characteristics}
 				\begin{itemize}
 					\item Simultaneous fitting of all parameters
-					\item Separation to global and local parameters
-					\item Computation complexity independent of local parameter size
+					\item Computation complexity independent of the number of track parameters
 					\item \alert{\textbf{No particle track reconstruction}}
 					\item Calibration relation \textbf{must be linear}
 				\end{itemize}
@@ -322,7 +321,7 @@
 				\includegraphics[width =\textwidth]{DPG2025/SilliconPixel.png}
 				\caption*{Alignment of silicon pixel detectors \footfullcite{REIDEL2019142}}
 			\end{figure}
-			\vspace{-2.2em}
+			% \vspace{-2.2em}
 		\end{column}
 		\begin{column}{0.45 \textwidth}
 			\pause
@@ -352,16 +351,15 @@
 			\begin{exampleblock} {Outlook}
 				\begin{itemize}
 					\setlength\itemsep{0.5em}
-					\item Improve energy calibration
 					\item Apply Millepede-II algorithm on energy-related parameters
-					\item Verify energy parameters via simulation
+					\item Verify energy parameters via simulation and real experimental data
 				\end{itemize}
 			\end{exampleblock}
 		\end{column}
 		\begin{column}{0.45 \textwidth}
 			\begin{figure}
-				\includegraphics[width = 0.8\textwidth]{neuland/position_cal/TimeDifference4.png}
-				\includegraphics[width = 0.9\textwidth]{neuland/millepede/sim_eff_c.png}
+				\includegraphics[width = 0.8\textwidth]{DPG2025/TimeDifference_2.png}
+				\includegraphics[width = 0.9\textwidth]{DPG2025/sim_comp_c_wide.png}
 			\end{figure}
 		\end{column}
 	\end{columns}
