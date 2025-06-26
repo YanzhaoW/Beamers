@@ -7,14 +7,41 @@ This repository contains my presentation sides for the past conferences and meet
 - Much better integration to git/github
 - Works on all operating systems (Bye Bye Windows!)
 
-Following packages are required to compile a project:
+Following packages are required to compile a project in your local machine:
 
 - Texlive (or BasicTex if using MacOS)
 - CMake
 - Any Latex package manager
 - Latex packages (see below)
 
+It's also possible to use this template in overleaf.
+
 ## Quick start
+
+### Import to overleaf
+
+1. Download the following files and import them into your overleaf project:
+    - `common/ikpKoeln.cls`
+    - `common/ikpKolen.lua`
+    - `template/main.tex`
+    - `template/reference.bin`
+  
+2. Create a new folder `figures` in the project and copy `figures/TitleLogo.jpeg` to the folder. 
+
+3. Activate LuaLatex in the setting.
+    1. Go to `Menu -> Settings -> Compiler`
+    2. Change the value from `pdfLatex` to `LuaLatex`
+
+3. In the `main.tex` file, change
+   ```latex
+   \graphicspath{{../figures/}}
+   ```
+   to
+   ```latex
+   \graphicspath{{figures/}}
+   ```
+
+### Compile latex locally
 
 1.  Create and initialize a new project:
 
