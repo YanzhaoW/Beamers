@@ -118,7 +118,7 @@
 	}
 }
 
-\AtBeginDocument{
+\newcommand*{\titleFrame}{
 	\luadirect{
 		tex.print(TitlePage.get_names())
 		tex.print(TitlePage.get_affiliations())
