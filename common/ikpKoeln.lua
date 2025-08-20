@@ -6,6 +6,8 @@ M.affiliations = {}
 M.title = ""
 M.title_short = ""
 M.email = ""
+M.working_group = "AG Zilges"
+M.uni = "University of Cologne"
 
 M.add_author_name = function(input)
     table.insert(M.author_names,
@@ -45,7 +47,7 @@ M.get_affiliations = function()
         table.insert(strings, [[ \inst{ ]] .. affiliation.id .. [[ } ]] .. affiliation.affiliation)
     end
     local full_string = [[{ ]] .. table.concat(strings, [[\\]]) .. [[ }]]
-    full_string = [[\institute[University of Cologne $\vert$ AG Zilges $\vert$ ] ]] .. full_string
+    full_string = [[ \institute[ ]] .. M.uni .. [[ $\vert$ ]] .. M.working_group .. [[ $\vert$ ] ]] .. full_string
     return full_string
 end
 
