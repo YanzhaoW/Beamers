@@ -48,7 +48,7 @@
 		\end{beamercolorbox}%
 		\begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{footlinecolor2}%
 			\usebeamerfont{title in head/foot}\insertshorttitle\hspace*{2ex}
-			\insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+			\hfill\insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
 		\end{beamercolorbox}}%
 	\vskip0pt%
 }
