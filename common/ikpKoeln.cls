@@ -114,6 +114,14 @@
 		TitlePage.email = \luastring{#1}
 	}}
 
+\newcommand*{\scUni}[1]{\luadirect{
+		TitlePage.uni = \luastring{#1}
+	}}
+
+\newcommand*{\scWG}[1]{\luadirect{
+		TitlePage.working_group = \luastring{#1}
+	}}
+
 \newcommand*{\useJabbr}[1]{
 	\luadirect{
         tex.print(JabbrConverter.convert(\luastring{#1}))
