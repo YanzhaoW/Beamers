@@ -47,9 +47,12 @@
 			\usebeamerfont{author in head/foot}\insertshortinstitute\insertshortauthor
 		\end{beamercolorbox}%
 		\begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{footlinecolor2}%
-			\usebeamerfont{title in head/foot}\insertshorttitle\hspace*{2ex}
-			\hfill\insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
-		\end{beamercolorbox}}%
+			\usebeamerfont{title in head/foot}\insertshorttitle
+		\end{beamercolorbox}%
+        \setlength{\fboxsep}{0pt}%
+        \setlength{\fboxrule}{0pt}%
+        \hspace{-3.5em}\framebox{\parbox{3em}{\raggedleft\usebeamerfont{title in head/foot} \insertframenumber{} / \inserttotalframenumber}}
+        }
 	\vskip0pt%
 }
 
