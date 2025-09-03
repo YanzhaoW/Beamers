@@ -20,7 +20,7 @@ It's also possible to use this template in overleaf.
 
 ### Using overleaf
 
-Please copy this overleaf project to your account: [overleaf template](https://www.overleaf.com/read/rnpmwzzhwhch#b951da)
+Please copy this overleaf project to your account: [overleaf example](https://www.overleaf.com/read/rnpmwzzhwhch#b951da)
 
 ### Local latex compilation
 
