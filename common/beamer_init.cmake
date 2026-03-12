@@ -53,9 +53,9 @@ add_custom_target(
           -interaction=nonstopmode ${MAIN_TEX}
   COMMAND ${TEX_COMPILER} -output-directory ${OUT_DIRECTORY} -draftmode
           -interaction=nonstopmode ${MAIN_TEX}
-  COMMENT "Starting Prebuild."
+          COMMENT "Starting Prebuild ..."
   WORKING_DIRECTORY ${WORKINGDIR}
-  DEPENDS ${MAIN_TEX} sync_picture_folder)
+  DEPENDS ${MAIN_TEX} )
 
 # Generate the indices for the index table.
 add_custom_target(
@@ -63,7 +63,7 @@ add_custom_target(
   COMMAND ${MAKEINDEX_COMPILER} ${MAIN_IDX}
   WORKING_DIRECTORY ${OUT_DIRECTORY}
   COMMENT "Read and create indices with ${MAIN_IDX}."
-  DEPENDS ${MAIN_IDX} sync_picture_folder)
+  DEPENDS ${MAIN_IDX} )
 add_dependencies(latex-makeindex latex-prebuild)
 
 # Generate what citation found in the latex file.
@@ -83,7 +83,7 @@ add_custom_target(
   COMMAND ${TEX_COMPILER} -output-directory ${OUT_DIRECTORY} ${MAIN_TEX}
   WORKING_DIRECTORY ${WORKINGDIR}
   COMMENT "Assembling the final pdf file."
-  DEPENDS ${MAIN_TEX} sync_picture_folder)
+  DEPENDS ${MAIN_TEX})
 
 add_custom_target(
   copy-pdf

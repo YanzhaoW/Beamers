@@ -83,7 +83,7 @@
 
 \luadirect{
 	TitlePage = require("ikpKoeln")
-	JabbrConverter = require("jabbrConverter")
+	% JabbrConverter = require("jabbrConverter")
 }
 
 \newcommand*{\scAffiliation}[2]{\luadirect{
