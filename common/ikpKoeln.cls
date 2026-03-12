@@ -13,7 +13,7 @@
 \usetheme{Madrid}
 
 \RequirePackage[T1]{fontenc}
-\RequirePackage{fourier-otf}
+\RequirePackage{fourier}
 
 % \usefonttheme[onlymath]{serif}
 % \MakePerPage{footnote}

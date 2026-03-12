@@ -41,7 +41,7 @@ file(CREATE_LINK "${CMAKE_CURRENT_SOURCE_DIR}/../common/ikpKoeln.lua"
 
 # copy pictures
 add_custom_target(
-  sync_picture_folder
+  fig
   COMMAND rsync -av ${SERVER_NAME}:${FIG_DESTINATION}/
           "${CMAKE_CURRENT_SOURCE_DIR}/../figures/${PROJECT_NAME}"
   COMMENT "copy the pictures from the server to a local folder in figures")
@@ -85,12 +85,12 @@ add_custom_target(
   COMMENT "Assembling the final pdf file."
   DEPENDS ${MAIN_TEX})
 
-add_custom_target(
-  copy-pdf
-  COMMAND cp "main.pdf" "${PROJECT_SOURCE_DIR}/main.pdf"
-  WORKING_DIRECTORY ${OUT_DIRECTORY}
-  COMMENT "Copy the generated pdf to the source folder"
-  DEPENDS latex-pdf)
+# add_custom_target(
+#   copy-pdf
+#   COMMAND cp "main.pdf" "${PROJECT_SOURCE_DIR}/main.pdf"
+#   WORKING_DIRECTORY ${OUT_DIRECTORY}
+#   COMMENT "Copy the generated pdf to the source folder"
+#   DEPENDS latex-pdf)
 
 if(EXISTS ${MAIN_IDX})
   add_dependencies(latex-pdf latex-prebuild latex-makeindex latex-bibreferences)
@@ -99,4 +99,4 @@ else()
 endif()
 
 add_custom_target(all-formats ALL COMMENT "Starting beamer building.")
-add_dependencies(all-formats latex-pdf copy-pdf)
+add_dependencies(all-formats latex-pdf)

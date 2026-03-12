@@ -35,46 +35,74 @@
     \setlength\belowdisplayshortskip{\myeqskip}
 }
 
-\AtBeginDocument{\RenewCommandCopy\qty\SI}
+% \AtBeginDocument{\RenewCommandCopy\qty\SI}
+
+\newtcolorbox{graybox}{%
+    colframe=gray,
+    sharp corners=all,
+    left=0mm,
+    bottom=0mm,
+    leftright skip=-1mm,%
+}
+
+\definecolor{TitleBoxBackColor}{RGB}{219, 228, 241}
+\definecolor{TitleBoxBorderColor}{RGB}{23, 54, 93}
+
+\newtcolorbox{titlebox}[2][]{%
+    sharp corners=all,
+    left=0mm,
+    top=0mm,
+    bottom=0mm,
+    leftright skip=-1mm,%
+    colframe=TitleBoxBorderColor,
+    colback=TitleBoxBackColor,
+    coltitle=black,
+    title={#2},
+    fonttitle=\bfseries,
+    detach title,before upper={\tcbtitle\par},
+    #1,
+}
 
 \begin{document}
 
-{
-\usebackgroundtemplate{%
-	\includegraphics[width=\paperwidth, height=\paperheight]{r3b/r3bsetup_empty.png}}
-\begin{frame}{NeuLAND setup in $\text{R}^3\text{B}$\footfullcite{BORETZKY}}
+\titleFrame
 
-	\begin{columns}[c]
-		\begin{column}{0.4\textwidth}
-			\pause
-			\begin{figure}
-				\includegraphics[width = \textwidth]{neuland/neulandReal}
-			\end{figure}
-		\end{column}
-		\hspace*{0.5cm}
-		\begin{column}{0.3\textwidth}
-			\begin{exampleblock}{}
-				Geometry:\\
-				\begin{itemize}
-					\item $26$ planes
-					\item $\qtyproduct[product-units=power]{250 x 250}{\centi\meter}$
-					\item $50$ scintillators each plane
-					\item $2600$ PMTs in total
-				\end{itemize}
+{
+	\usebackgroundtemplate{%
+		\includegraphics[width=\paperwidth, height=\paperheight]{r3b/r3bsetup_empty.png}}
+	\begin{frame}{NeuLAND setup in $\text{R}^3\text{B}$\footfullcite{BORETZKY}}
+
+		\begin{columns}[c]
+			\begin{column}{0.4\textwidth}
 				\pause
-				Parameters:\\
-				\begin{itemize}
-					\item Effective speed of light
-					\item Time offset between adjacent bars
-					\item Time synchronization
-				\end{itemize}
-			\end{exampleblock}
-		\end{column}
-		\begin{column}{0.3\textwidth}
-		\end{column}
-	\end{columns}
-	% \let\thefootnote\relax\footnotetext{\fullcite{BORETZKY}}
-\end{frame}
+				\begin{figure}
+					\includegraphics[width = \textwidth]{neuland/neulandReal}
+				\end{figure}
+			\end{column}
+			\hspace*{0.5cm}
+			\begin{column}{0.3\textwidth}
+				\begin{exampleblock}{}
+					Geometry:\\
+					\begin{itemize}
+						\item $26$ planes
+						\item $\qtyproduct[product-units=power]{250 x 250}{\centi\meter}$
+						\item $50$ scintillators each plane
+						\item $2600$ PMTs in total
+					\end{itemize}
+					\pause
+					Parameters:\\
+					\begin{itemize}
+						\item Effective speed of light
+						\item Time offset between adjacent bars
+						\item Time synchronization
+					\end{itemize}
+				\end{exampleblock}
+			\end{column}
+			\begin{column}{0.3\textwidth}
+			\end{column}
+		\end{columns}
+		% \let\thefootnote\relax\footnotetext{\fullcite{BORETZKY}}
+	\end{frame}
 }
 
 \begin{frame}[t]{NeuLAND time and position calibration}
@@ -117,12 +145,9 @@
 	\begin{columns}[t]
 		\begin{column}{0.5\textwidth}
 			\vspace{-2em}
-			\begin{tcolorbox}[colframe=gray,%
-					sharp corners=all, left=0mm, bottom=0mm, leftright skip=-1mm]
-				\textbf{Objective function minimization:}
+			\begin{titlebox}{Objective function minimization}
 				$$\vec{P}, \vec{Q} = \operatorname*{argmin}_{\vec{p}, \vec{q}} f(\vec{p}, \vec{q}, z, t_\text{diff}, t_\text{sum})$$
 				{
-						\scriptsize
 						\textit{where}:
 						\begin{flalign*}
 							\setlength{\belowdisplayskip}{0pt}
@@ -131,7 +156,7 @@
 							\vec{q}              & : \text{Parameters of all muon tracks }(\vec{q}^0, \ \vec{q}^1, \ \ldots, \ \vec{q}^N) &
 						\end{flalign*}
 					}
-			\end{tcolorbox}
+			\end{titlebox}
 			\begin{alertblock}{Limitations of Newton's method}
 				\begin{itemize}
 					\item Evaluation of Hessian is very expensive. (Quasi Newton's method, e.g. BFGS)
@@ -160,83 +185,120 @@
 \end{frame}
 
 
+\begin{frame}[t]{Minimization with Millepede algorithm}
+	\begin{block}{Parameter properties in calibration with muon tracks}
+		\begin{itemize}
+			\item Only the result of parameters related to scintillation bars is needed.
+			\item Parameters related to one muon track is independent to another.
+		\end{itemize}
+	\end{block}
+	Separation into \textbf{global} and \textbf{local} parameters in Millepede algorithm:
+	\begin{center}
+		$\begin{array} {|c|c|c|c|} \hline
+				\text{Global parameters}\ \vec{p}_i & \text{Local parameters} \ \vec{q}^0      & ... & \text{Local parameters} \ \vec{q}^N      \\ \hline
+				p_1, p_2, \ldots, p_{3900}          & a^0_x, b^0_x, a^0_y, b^0_y, a^0_t, b^0_t & ... & a^N_x, b^N_x, a^N_y, b^N_y, a^N_t, b^N_t \\ \hline
+			\end{array}$
+	\end{center}
 
-
-\begin{frame}[t]{Newton's method and Millepede algorithm}
-	\vspace{-3em}
+	\vspace{-0.5em}
 	\begin{columns}[t]
-		\begin{column}{0.45\textwidth}
-			\begin{tcolorbox}[colframe=gray, halign title=flush center, adjusted title=Objective function minimization,%
-					sharp corners=all, left=0mm, bottom=0mm]
-				$$\vec{P}, \vec{Q} = \operatorname*{argmin}_{\vec{p}, \vec{q}} f(\vec{p}, \vec{q}, z, t_\text{diff}, t_\text{sum})$$
-				{
-						\scriptsize
-						\textit{where}:
-						\begin{flalign*}
-							\setlength{\belowdisplayskip}{0pt}
-							\setlength{\abovedisplayskip}{0pt}
-							\hspace{3mm} \vec{p} & : \text{Parameters of scintillators} & \\
-							\vec{q}              & : \text{Parameters of muon tracks}   &
-						\end{flalign*}
-					}
-			\end{tcolorbox}
-			\textbf{Traditional Newton's method:}
-			\vspace{-1em}
-			\begin{figure}
-				% https://suzyahyah.github.io/calculus/optimization/2018/04/06/Taylor-Series-Newtons-Method.html
-				\includegraphics[width=0.6\textwidth]{DPG2026/NewtonsMethod}
-			\end{figure}
-			\vspace{-1em}
-			{\scriptsize
-			Iteration step:
-			$$\overrightarrow{W}_{n+1}= \overrightarrow{W}_{n} - \eta \cdot \left.  \mathcal{B}(\vec{w})^{-1} \nabla f(\vec{w}) \right|_{\vec{w} = \overrightarrow{W}_{n}} $$
-			\textit{where}:
-			\begin{flalign*}
-				\hspace{10em}	\eta   & = 1                   & \text{(Line search)}    & \\
-				\mathcal{B}(\vec{q}) & = \nabla^2 f(\vec{q}) & \text{(Hessian matrix)} &
-			\end{flalign*}
-			}
-			\vspace{-2em}
+		\begin{column}{0.6 \textwidth}
+			\begin{graybox}
+				\textbf{nth iteration on global parameters}
+				\begin{flalign*}
+					 &                               & \vec{p}_{n+1}                  & = \vec{p}_{n} - \left.  \mathcal{B}(\vec{p}, \vec{q})^{-1} \left(\nabla_p f + \mathcal{R}(\vec{p}, \vec{q})\nabla_q f \right) \right|_{\vec{p} = \vec{p}_{n}, \vec{q} = \vec{q}^n} \hspace{-7em} &                                  & \\
+					 & \textit{where}: \hspace{-7em} &                                &                                                                                                                                                                                                  &                                  & \\
+					 &                               & \mathcal{B}(\vec{p}, \vec{q})  & =  \nabla^2_pf  -\nabla^2_{pq}f \cdot \nabla^2_{q}f \cdot \left(\nabla^2_{pq}f\right)^\intercal                                                                                                  & (\text{size: } 3900 \times 3900) & \\
+					 &                               & \mathcal{R} (\vec{p}, \vec{q}) & = - \nabla^2_{pq}f \cdot \left(\nabla^2_qf\right)^{-1}                                                                                                                                           & (\text{size: } 3900 \times 6)    &
+				\end{flalign*}
+			\end{graybox}
 		\end{column}
-		\begin{column}{0.55\textwidth}
-			\begin{alertblock}{Limitations of Newton's method}
+		\begin{column}{0.35 \textwidth}
+			\begin{exampleblock}{Advantage of Millepede algorithm}
 				\begin{itemize}
-					\item Evaluation of Hessian is very expensive. (Quasi Newton's method, e.g. BFGS)
-					\item Expensive computation with large numbers of parameters.
+					\item Still simultaneous fitting of all parameters
+					\item Computation complexity independent of the number of muon tracks
 				\end{itemize}
-			\end{alertblock}
-			\textbf{Millepede algorithm:}
-
-			Separation into global and local parameters:
-			{\scriptsize
-			$\begin{array} {|c|c|c|c|} \hline
-					\text{Global parameters} \vec{p}_i & \text{Local paramters} \ \vec{q}^0 & ... & \text{Local parameters} \ \vec{q}^N \\ \hline
-					p_1, p_2, \ldots, p_{3900}         & a^0_x, b^0_x, a^0_t, b^0_t         & ... & a^N_x, b^N_x, a^N_t, b^N_t          \\ \hline
-				\end{array}$
-
-			}
-			\footnotesize Iteration on global parameters:
-			$$ $$
-			\begin{flalign*}
-				 &                 & \vec{p}_{n+1}                  & = \vec{p}_{n} - \left.  \mathcal{B}(\vec{p}, \vec{q})^{-1} \left(\nabla_p f + \mathcal{R}(\vec{p}, \vec{q})^{-1}\nabla_q f \right) \right|_{\vec{p} = \vec{p}_{n}, \vec{q} = \vec{q}^n} & \\
-				 & \textit{where}: &                                &                                                                                                                                                                                         & \\
-				 &                 & \mathcal{B}(\vec{p}, \vec{q})  & =  \nabla^2_pf  -\nabla^2_{pq}f \cdot \nabla^2_{q}f \cdot \left(\nabla^2_{pq}f\right)^\intercal                                                                                         & \\
-				 &                 & \mathcal{R} (\vec{p}, \vec{q}) & = - \nabla^2_{pq}f \cdot \left(\nabla^2_qf\right)^{-1}                                                                                                                                  &
-			\end{flalign*}
-
+			\end{exampleblock}
 		\end{column}
 	\end{columns}
 \end{frame}
 
-\begin{frame}[t]{Verification with simulated data from a simple detector}
+\begin{frame}[t]{Millepede-II program and adaptation to NeuLAND}
+	\vspace{-1em}
+	\begin{columns}[t]
+		\begin{column}{0.45 \textwidth}
+			\textbf{Millepede-II program structure}
+			\begin{figure}
+				\begin{center}
+					\includegraphics[width=0.95\textwidth]{DPG2026/MillepedeStruct.png}
+				\end{center}
+			\end{figure}
+			\begin{titlebox}{Prerequisites}
+				\begin{itemize}
+					\item Calibration equation must be \alert{linear}.
+					      $$M(z, t) = \sum_{i}G^i(z, t)p^i +\sum_{j}L^j(z, t)q^j $$
+					\item "Good" initial global parameter values.
+					\item No rank deficit.
+				\end{itemize}
+			\end{titlebox}
+		\end{column}
+		\begin{column}{0.45 \textwidth}
+			\textbf{Rank deficit in calibration equations}
+			\begin{figure}
+				\includegraphics[width=0.4\textwidth]{example-image-16x10}
+			\end{figure}
+			{\footnotesize
+			A simple example:
+			\begin{equation*}
+				\setlength\abovedisplayskip{0mm}
+				\setlength\belowdisplayskip{0mm}
+				y = a \cdot x + b + c
+			\end{equation*}
+			With three data points $(x_1, y_1)$, $(x_2, y_2)$ and $(x_3, y_3)$:
+			\begin{equation*}
+				\setlength\abovedisplayskip{0mm}
+				\setlength\belowdisplayskip{0mm}
+				\begin{bmatrix} x_1 & 1 & 1 \\\
+                x_2 & 1 & 1 \\\
+                x_3 & 1 & 1
+				\end{bmatrix} \begin{bmatrix}
+					a \\\ b \\\ c
+				\end{bmatrix} = \begin{bmatrix}
+					y_1 \\\ y_2 \\\ y_3
+				\end{bmatrix}
+			\end{equation*}
+			\textbf{Solution}: Fixing either parameter $b$ or $c$.
+			}
+			{
+			\vspace{-0.5em}
+			\begin{block}{\small Solving the rank deficit in NeuLAND calibration}
+				\begin{itemize}
+					\item Assuming muon speed to be $\mathbf{c}$. (Fixing parameter $a_t$)
+					\item Time synchronization factor is 0 for one bar.
+				\end{itemize}
+			\end{block}
+			}
 
-\end{frame}
-
-\begin{frame}[t]{Adapting Millepede algorithm to NeuLAND}
+		\end{column}
+	\end{columns}
 
 \end{frame}
 
 \begin{frame}[t]{Calibration results from Millepede}
+    \textbf{Comparison between initial values and results}
+    \vspace{-2em}
+    \begin{columns}[t]
+        \begin{column}{0.5 \textwidth}
+            \begin{figure}
+                \begin{center}
+                    \includegraphics[width=\textwidth]{DPG2026/EffectiveSpeedInitCompare}
+                \end{center}
+            \end{figure}
+        \end{column}
+        \begin{column}{0.45 \textwidth}
+        \end{column}
+    \end{columns}
 
 \end{frame}
 
