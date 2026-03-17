@@ -33,6 +33,9 @@ end
 M.get_names = function()
     local name_strings = {}
     for _, author_name in ipairs(M.author_names) do
+        if author_name.is_stared == "*" then
+            author_name.full_name = [[\textbf{ ]] .. author_name.full_name .. [[}]]
+        end
         local name_string = author_name.full_name .. [[\inst{]] .. author_name.affiliation_number .. [[}]]
         table.insert(name_strings, name_string)
     end

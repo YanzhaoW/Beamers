@@ -31,7 +31,7 @@
 \setbeamertemplate{navigation symbols}{}
 % \setbeamertemplate{frametitle}[default][center]
 \setbeamertemplate{frametitle}{%
-	\vspace{-0.13cm}
+	\vspace{-0.15cm}
 	\begin{beamercolorbox}[wd=\paperwidth, ht=0.5cm, dp=0.2cm]{frametitle}
 		\center\usebeamerfont{frametitle}\insertframetitle
 	\end{beamercolorbox}
@@ -123,10 +123,10 @@
 	}}
 
 \newcommand*{\useJabbr}[1]{
-	\luadirect{
-        tex.print(JabbrConverter.convert(\luastring{#1}))
-        % texio.write(JabbrConverter.convert(\luastring{#1}))
-	}
+	\luadirect{%
+        tex.print(JabbrConverter.convert(\luastring{#1}))%
+        texio.write(JabbrConverter.convert(\luastring{#1}))
+	}%
 }
 
 \newcommand*{\titleFrame}{
