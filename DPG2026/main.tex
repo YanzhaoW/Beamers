@@ -9,7 +9,7 @@
 \usepackage[listings,theorems]{tcolorbox}
 \usepackage{tabularray}
 
-\scTitle{Application of the Millepede II algorithm to the NeuLAND time-position calibration}
+\scTitle{Application of the Millepede algorithm to the NeuLAND time-position calibration}
 \scAuthor{*}{Yanzhao}{Wang}{1}
 \scAuthor{}{Luca}{Flandoli}{1}
 \scAuthor{}{Igor}{Gasparic}{2}
@@ -134,9 +134,8 @@
 			\end{figure}
 		\end{column}
 		\begin{column}{0.45\textwidth}
-			\pause
 			\textbf{Current method}:
-			using active bar positions to reconstruct muon tracks:
+            using \alert{active bar positions} to reconstruct muon tracks:
 			\begin{figure}
 				\includegraphics[width=\textwidth]{DPG2026/BarPositions}
 			\end{figure}
@@ -145,7 +144,7 @@
 	\vspace*{-1em}
 	\begin{columns}[t]
 		\begin{column}{0.4 \textwidth}
-			\begin{exampleblock}{Calibration relations}
+			\begin{exampleblock}{Calibration equations}
 				\vspace{-1em}
 				\begin{align}
 					\alert{b_x} + z \cdot \alert{a_x} + \alert{c_e} \cdot t_\text{diff} /2 - \alert{t_\text{offset}}/2                  & = 0 \\
@@ -154,7 +153,7 @@
 			\end{exampleblock}
 		\end{column}
 		\begin{column}{0.45 \textwidth}
-			\begin{block}{Relations with known muon tracks}
+			\begin{block}{Equations with known muon tracks}
 				\vspace{-1em}
 				\begin{align}
 					\mathcal{C}(a_x, b_x, z) + \alert{c_e} \cdot t_\text{diff} - \alert{t_\text{offset} }                                    & = 0 \\
@@ -197,7 +196,7 @@
 	\end{columns}
 	\begin{columns}[t]
 		\begin{column}{0.5 \textwidth}
-			\onslide<3->
+			\onslide<2->
 			{
 				\begin{alertblock}{Limitations of Newton's method}
 					\begin{itemize}
@@ -231,9 +230,9 @@
 
 \begin{frame}[t]{Minimization with Millepede algorithm}
 	\vspace{-1em}
-	\begin{block}{Parameter properties in calibration with muon tracks}
+	\begin{block}{Special features in calibration with muon tracks}
 		\begin{itemize}
-			\item Only the result of parameters related to scintillation bars is needed.
+            \item Only \alert{3900} parameters from scintillation bars are needed.
 			\item Parameters related to one muon track is independent to another.
 		\end{itemize}
 	\end{block}
@@ -324,7 +323,7 @@
 			\begin{block}{\small Solving the rank deficit in NeuLAND calibration}
 				\begin{itemize}
 					\item Assuming muon speed to be $\mathbf{c}$. (Fixing parameter $a_t$)
-					\item Time synchronization factor is 0 for one bar.
+					\item Time synchronization factor fixed to be 0 for one bar.
 				\end{itemize}
 			\end{block}
 			}
